@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en-GB">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Results — Pievra</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <main>
+      <header>
+        <p class="eyebrow">Diagnostics · results stay on this device</p>
+        <h1>Sites handled so far</h1>
+        <p class="lede">
+          Each row is a site where a known cookie banner product was found. Sites with no row were not recognised and were left alone.
+        </p>
+        <section class="send" aria-labelledby="send">
+          <h2 id="send">Sending your results to the Pievra team</h2>
+          <ol>
+            <li>Press <strong>Download with site names</strong>. The team needs the names to know which site each result is for.</li>
+            <li>A file called <code>pievra-results-…json</code> is saved to your downloads.</li>
+            <li>Email that file to <a href="mailto:contact@pievra.com">contact@pievra.com</a>. It is not the same file as “Export my choices” in the settings.</li>
+          </ol>
+          <div class="actions">
+            <button id="download-named" type="button">Download with site names</button>
+            <button id="download" type="button" class="quiet">Download without site names</button>
+            <button id="refresh" type="button" class="quiet">Refresh</button>
+          </div>
+          <p class="option">With site names, the file shows which of the sites below you visited, and your browser’s language and time zone. Without them, sites are numbered instead. Nothing is sent by this page: the file is only saved on your device, and sending it is your choice. What we do with a file you send is in the privacy policy.</p>
+          <p id="summary" role="status" aria-live="polite"></p>
+        </section>
+      </header>
+      <div class="table-wrap">
+        <table>
+          <caption class="visually-hidden">Recorded results by site</caption>
+          <thead>
+            <tr><th scope="col">Site</th><th scope="col">Result</th><th scope="col">Banner product</th><th scope="col">What was checked</th><th scope="col">Last attempt</th></tr>
+          </thead>
+          <tbody id="rows"></tbody>
+        </table>
+        <p id="empty" hidden>Nothing recorded yet. Visit a site with a cookie banner, wait ten seconds, then press Refresh.</p>
+      </div>
+      <section aria-labelledby="key">
+        <h2 id="key">What the results mean</h2>
+        <dl>
+          <dt>Refused and confirmed</dt><dd>Refusal sent, and the banner product confirmed it stored the refusal.</dd>
+          <dt>Partly done</dt><dd>Refusal stored, but something remains (for example “legitimate interest” still declared), or you allowed a purpose that could not be granted separately.</dd>
+          <dt>Applied, not confirmed</dt><dd>The refusal steps ran, usually inside a banner frame that then closed, and nothing could confirm what was stored. Not counted as a success.</dd>
+          <dt>Not accepted</dt><dd>You allow everything on the site, and Pievra has no way to press “accept” on this banner product. Nothing was clicked.</dd>
+          <dt>Accept or pay</dt><dd>The site offers no free refusal. Nothing was clicked.</dd>
+          <dt>Could not manage consent</dt><dd>The action did not complete, or the banner product reports the refusal was not stored.</dd>
+          <dt>Left alone</dt><dd>Left alone on purpose, for example a password field was filled in.</dd>
+          <dt>No banner open</dt><dd>A banner product is present but no banner was open.</dd>
+        </dl>
+      </section>
+    </main>
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>

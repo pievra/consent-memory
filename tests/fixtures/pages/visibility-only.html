@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en-GB">
+  <head><meta charset="utf-8" /><title>Fixture: banner whose rule can only check that it closed</title></head>
+  <body>
+    <h1>Fixture school</h1>
+    <!-- Matches Autoconsent's "binogi" rule, whose self test is "the banner is no longer visible".
+         This CMP stores nothing at all on refusal, so there is nothing that could be verified. -->
+    <div id="binogi_cookie_notice" role="dialog">
+      <p>We use cookies.</p>
+      <button id="cnaccept" data-test-role="accept">Accept</button>
+      <button id="cnreject" data-test-role="reject">Reject</button>
+    </div>
+    <script>
+      window.__clicks = { accept: 0, reject: 0 };
+      const notice = document.getElementById('binogi_cookie_notice');
+      document.getElementById('cnaccept').addEventListener('click', () => { window.__clicks.accept++; notice.remove(); });
+      document.getElementById('cnreject').addEventListener('click', () => { window.__clicks.reject++; notice.remove(); });
+    </script>
+  </body>
+</html>

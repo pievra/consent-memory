@@ -1,0 +1,6 @@
+{
+  "extDescription": {
+    "message": "Refuse les cookies facultatifs sur les bandeaux reconnus, vérifie que le refus est enregistré. Vos choix restent sur votre appareil.",
+    "description": "Description de l’extension affichée dans le navigateur et la boutique. 132 caractères au maximum."
+  }
+}

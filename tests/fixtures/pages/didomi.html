@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="fr">
+  <head><meta charset="utf-8" /><title>Fixture: Didomi style notice</title></head>
+  <body>
+    <h1>Fixture journal</h1>
+    <div id="didomi-host">
+      <div id="didomi-notice" role="dialog">
+        <p>Nous utilisons des cookies.</p>
+        <button id="didomi-notice-agree-button">Accepter</button>
+        <button id="didomi-notice-disagree-button">Refuser</button>
+      </div>
+    </div>
+    <script>
+      // Simulated markup and API surface only; no vendor code.
+      // Like the real product in many configurations, the refuse button withdraws consent and
+      // leaves legitimate interest declared; Didomi.setUserDisagreeToAll() refuses both.
+      //   ?noapi   the page exposes no Didomi object
+      //   ?deaf    setUserDisagreeToAll exists but changes nothing
+      const q = new URLSearchParams(location.search);
+      window.__clicks = { accept: 0, reject: 0 };
+      window.__objections = 0;
+      let consent = true, li = true, status = 'cmpuishown';
+      const close = () => { document.getElementById('didomi-notice').remove(); document.getElementById('didomi-host').setAttribute('aria-hidden', 'true'); status = 'useractioncomplete'; };
+      document.getElementById('didomi-notice-agree-button').addEventListener('click', () => { window.__clicks.accept++; close(); });
+      document.getElementById('didomi-notice-disagree-button').addEventListener('click', () => { window.__clicks.reject++; consent = false; close(); });
+      if (!q.has('noapi')) {
+        window.Didomi = {
+          setUserDisagreeToAll: () => { window.__objections++; if (!q.has('deaf')) { consent = false; li = false; } },
+          getCurrentUserStatus: () => ({ purposes: { cookies: { id: 'cookies', enabled: consent }, measure: { id: 'measure', enabled: consent } } }),
+        };
+      }
+      window.__tcfapi = (command, version, callback) => {
+        if (command === 'addEventListener') {
+          callback({ eventStatus: status, listenerId: 1, purpose: {
+            consents: consent ? { 1: true, 2: true, 7: true } : {},
+            legitimateInterests: li ? { 2: true, 7: true, 8: true, 9: true, 10: true, 11: true } : {},
+          } }, true);
+        } else if (command === 'removeEventListener') { callback(true, true); }
+      };
+    </script>
+  </body>
+</html>

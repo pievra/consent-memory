@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en-GB">
+  <head><meta charset="utf-8" /><title>Fixture: Cookiebot style banner with the category interface</title></head>
+  <body>
+    <h1>Fixture garden centre</h1>
+    <!-- Simulated markup and API surface only; no vendor code.
+         ?noapi   the category interface is missing (older or customised installation)
+         ?sticky  the tool ignores a refusal of marketing and keeps it on
+         ?drop    the tool ignores a grant of statistics and keeps it off -->
+    <div id="CybotCookiebotDialog" role="dialog">
+      <p>This website uses cookies.</p>
+      <button id="CybotCookiebotDialogBodyLevelButtonLevelOptinDeclineAll" data-test-role="reject">Deny</button>
+      <button id="CybotCookiebotDialogBodyButtonAccept" data-test-role="accept">Allow all</button>
+    </div>
+    <script>
+      const flags = new URLSearchParams(location.search);
+      window.__clicks = { accept: 0, reject: 0 };
+      window.__submitted = [];
+      const dialog = document.getElementById('CybotCookiebotDialog');
+      window.Cookiebot = {
+        hasResponse: false, declined: false, consented: false, dialog: { visible: true },
+        consent: { necessary: true, preferences: false, statistics: false, marketing: false },
+        withdraw() { this.declined = true; this.hasResponse = true; },
+        hide() { dialog.remove(); this.dialog.visible = false; },
+      };
+      if (!flags.has('noapi')) {
+        window.Cookiebot.submitCustomConsent = function (preferences, statistics, marketing) {
+          window.__submitted.push([preferences, statistics, marketing]);
+          // The real tool records the answer a moment later.
+          setTimeout(() => {
+            this.consent.preferences = preferences;
+            this.consent.statistics = flags.has('drop') ? false : statistics;
+            this.consent.marketing = flags.has('sticky') ? true : marketing;
+            this.consented = preferences || statistics || marketing;
+            this.declined = !this.consented;
+            this.hasResponse = true;
+          }, 400);
+          this.hide();
+        };
+      }
+      document.getElementById('CybotCookiebotDialogBodyLevelButtonLevelOptinDeclineAll').addEventListener('click', () => {
+        window.__clicks.reject++; window.Cookiebot.withdraw(); window.Cookiebot.hide();
+      });
+      document.getElementById('CybotCookiebotDialogBodyButtonAccept').addEventListener('click', () => {
+        window.__clicks.accept++; window.Cookiebot.consented = true; window.Cookiebot.hasResponse = true; window.Cookiebot.hide();
+      });
+    </script>
+  </body>
+</html>

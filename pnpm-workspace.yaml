@@ -1,0 +1,3 @@
+# Install scripts stay off. esbuild works from its prebuilt platform package without its script.
+allowBuilds:
+  esbuild: false

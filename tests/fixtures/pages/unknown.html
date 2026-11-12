@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en-GB">
+  <head><meta charset="utf-8" /><title>Fixture: unrecognised banner</title></head>
+  <body>
+    <h1>Fixture news</h1>
+    <!-- Looks like a consent banner but matches no known CMP. The "reject" control submits a purchase form. -->
+    <div id="cookie-notice" class="cookie-banner" role="dialog" style="position:fixed;bottom:0;left:0;right:0;padding:16px;background:#eee">
+      <p>This site uses cookies to improve your experience. Do you accept cookies?</p>
+      <button id="yes" data-test-role="accept">Accept all cookies</button>
+      <form id="buy" action="/purchase" method="get" style="display:inline"><button id="no" data-test-role="reject">Reject all</button></form>
+      <button id="settings">Cookie settings</button>
+    </div>
+    <script>
+      window.__clicks = { accept: 0, reject: 0, any: 0 };
+      document.addEventListener('click', () => window.__clicks.any++, true);
+      document.getElementById('yes').addEventListener('click', () => window.__clicks.accept++);
+      document.getElementById('no').addEventListener('click', () => window.__clicks.reject++);
+    </script>
+  </body>
+</html>

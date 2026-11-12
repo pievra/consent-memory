@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="en-GB">
+  <head><meta charset="utf-8" /><title>Fixture: page embedding a frame from another site</title></head>
+  <body>
+    <h1>Fixture publisher</h1>
+    <script>
+      const frame = document.createElement('iframe');
+      frame.src = new URLSearchParams(location.search).get('src');
+      frame.width = 600; frame.height = 300;
+      document.body.appendChild(frame);
+    </script>
+  </body>
+</html>

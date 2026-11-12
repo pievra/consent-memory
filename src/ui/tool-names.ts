@@ -1,0 +1,52 @@
+/**
+ * Product names for the consent tools people meet most, keyed by the name the detection engine
+ * uses. Display only: records, search and exports keep the engine's name. A tool that is not
+ * listed is shown under the engine's name, which for a site's own banner is the site.
+ */
+const NAMES: Readonly<Record<string, string>> = Object.freeze({
+  Onetrust: 'OneTrust',
+  Cybotcookiebot: 'Cookiebot',
+  'Sourcepoint-frame': 'Sourcepoint',
+  quantcast: 'Quantcast Choice',
+  inmobi: 'InMobi Choice',
+  didomi: 'Didomi',
+  AppConsent: 'AppConsent',
+  'TrustArc-top': 'TrustArc',
+  'TrustArc-frame': 'TrustArc',
+  'trustarc-newcm': 'TrustArc',
+  'consentmanager.net': 'consentmanager',
+  'consentmanager-ncmp': 'consentmanager',
+  'usercentrics-api': 'Usercentrics',
+  'usercentrics-button': 'Usercentrics',
+  axeptio: 'Axeptio',
+  'axeptio-tcf': 'Axeptio',
+  iubenda: 'iubenda',
+  'iubenda-rti': 'iubenda',
+  cookieyes: 'CookieYes',
+  'cookieyes-legacy': 'CookieYes',
+  'cookie-script': 'CookieScript',
+  cookiefirst: 'CookieFirst',
+  cookiehub: 'CookieHub',
+  cookieinformation: 'Cookie Information',
+  'complianz-banner': 'Complianz',
+  'complianz-categories': 'Complianz',
+  'complianz-notice': 'Complianz',
+  'complianz-optin': 'Complianz',
+  'complianz-opt-out': 'Complianz',
+  borlabs: 'Borlabs Cookie',
+  'civic-cookie-control': 'Civic Cookie Control',
+  hubspot: 'HubSpot',
+  ketch: 'Ketch',
+  osano: 'Osano',
+  sirdata: 'Sirdata',
+  tealium: 'Tealium',
+  termly: 'Termly',
+  transcend: 'Transcend',
+  Klaro: 'Klaro',
+  Evidon: 'Evidon',
+  Uniconsent: 'UniConsent',
+  google: 'Google',
+  'google-consent-standalone': 'Google',
+});
+
+export const toolName = (cmp: string | undefined): string => (cmp === undefined ? '—' : Object.hasOwn(NAMES, cmp) ? NAMES[cmp]! : cmp);
