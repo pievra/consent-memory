@@ -1,0 +1,1212 @@
+[
+  {
+    "id": "FR-01",
+    "country": "FR",
+    "sector": "media",
+    "url": "https://www.lemonde.fr/",
+    "ranAt": "2026-11-11T16:38:07.344Z",
+    "plain": {
+      "httpStatus": 200,
+      "error": null,
+      "title": "Le Monde.fr - Actualités et Infos en France et dans le monde"
+    },
+    "first": {
+      "httpStatus": 200,
+      "error": null,
+      "title": "Le Monde.fr - Actualités et Infos en France et dans le monde",
+      "records": []
+    },
+    "reload": {
+      "records": []
+    }
+  },
+  {
+    "id": "FR-02",
+    "country": "FR",
+    "sector": "media",
+    "url": "https://www.lefigaro.fr/",
+    "ranAt": "2026-11-11T16:39:20.356Z",
+    "plain": {
+      "httpStatus": 200,
+      "error": null,
+      "title": "Le Figaro - Actualité en direct et informations en continu"
+    },
+    "first": {
+      "httpStatus": 200,
+      "error": null,
+      "title": "Le Figaro - Actualité en direct et informations en continu",
+      "records": [
+        {
+          "domain": "lefigaro.fr",
+          "status": "detected",
+          "cmp": "AppConsent",
+          "evidence": [],
+          "unfulfilled": [],
+          "audit": null
+        }
+      ]
+    },
+    "reload": {
+      "records": [
+        {
+          "domain": "lefigaro.fr",
+          "status": "detected",
+          "cmp": "AppConsent",
+          "evidence": [],
+          "unfulfilled": [],
+          "audit": null
+        }
+      ]
+    }
+  },
+  {
+    "id": "FR-03",
+    "country": "FR",
+    "sector": "retail",
+    "url": "https://www.fnac.com/",
+    "ranAt": "2026-11-11T16:40:39.762Z",
+    "plain": {
+      "httpStatus": 403,
+      "error": null,
+      "title": "FNAC DARTY - Maintenance"
+    },
+    "first": {
+      "httpStatus": 403,
+      "error": null,
+      "title": "FNAC DARTY - Maintenance",
+      "records": []
+    },
+    "reload": {
+      "records": []
+    }
+  },
+  {
+    "id": "FR-04",
+    "country": "FR",
+    "sector": "ecommerce",
+    "url": "https://www.cdiscount.com/",
+    "ranAt": "2026-11-11T16:41:48.666Z",
+    "plain": {
+      "httpStatus": 403,
+      "error": null,
+      "title": "Accès bloqué"
+    },
+    "first": {
+      "httpStatus": 403,
+      "error": null,
+      "title": "Accès bloqué",
+      "records": []
+    },
+    "reload": {
+      "records": []
+    }
+  },
+  {
+    "id": "FR-05",
+    "country": "FR",
+    "sector": "ecommerce",
+    "url": "https://www.leboncoin.fr/",
+    "ranAt": "2026-11-11T16:42:57.368Z",
+    "plain": {
+      "httpStatus": 403,
+      "error": null,
+      "title": "leboncoin.fr"
+    },
+    "first": {
+      "httpStatus": 403,
+      "error": null,
+      "title": "leboncoin.fr",
+      "records": []
+    },
+    "reload": {
+      "records": []
+    }
+  },
+  {
+    "id": "FR-06",
+    "country": "FR",
+    "sector": "travel",
+    "url": "https://www.sncf-connect.com/",
+    "ranAt": "2026-11-11T16:44:05.636Z",
+    "plain": {
+      "httpStatus": 403,
+      "error": null,
+      "title": "sncf-connect.com"
+    },
+    "first": {
+      "httpStatus": 403,
+      "error": null,
+      "title": "sncf-connect.com",
+      "records": []
+    },
+    "reload": {
+      "records": []
+    }
+  },
+  {
+    "id": "FR-07",
+    "country": "FR",
+    "sector": "travel",
+    "url": "https://www.airfrance.fr/",
+    "ranAt": "2026-11-11T16:45:14.435Z",
+    "plain": {
+      "httpStatus": null,
+      "error": "page.goto: Timeout 45000ms exceeded.",
+      "title": "Loading https://www.airfrance.fr/"
+    },
+    "first": {
+      "httpStatus": null,
+      "error": "page.goto: Timeout 45000ms exceeded.",
+      "title": "Loading https://www.airfrance.fr/",
+      "records": []
+    },
+    "reload": {
+      "records": []
+    }
+  },
+  {
+    "id": "FR-08",
+    "country": "FR",
+    "sector": "banking",
+    "url": "https://mabanque.bnpparibas/",
+    "ranAt": "2026-11-11T16:48:52.854Z",
+    "plain": {
+      "httpStatus": 403,
+      "error": null,
+      "title": "Access Denied"
+    },
+    "first": {
+      "httpStatus": 403,
+      "error": null,
+      "title": "Access Denied",
+      "records": []
+    },
+    "reload": {
+      "records": []
+    }
+  },
+  {
+    "id": "FR-09",
+    "country": "FR",
+    "sector": "services",
+    "url": "https://www.orange.fr/",
+    "ranAt": "2026-11-11T16:50:01.156Z",
+    "plain": {
+      "httpStatus": 200,
+      "error": null,
+      "title": "Portail Orange | Offres Mobiles, Internet, TV, Actu & Accès compte Mail"
+    },
+    "first": {
+      "httpStatus": 200,
+      "error": null,
+      "title": "Portail Orange | Offres Mobiles, Internet, TV, Actu & Accès compte Mail",
+      "records": [
+        {
+          "domain": "orange.fr",
+          "status": "detected",
+          "cmp": "didomi",
+          "evidence": [],
+          "unfulfilled": [],
+          "audit": null
+        }
+      ]
+    },
+    "reload": {
+      "records": [
+        {
+          "domain": "orange.fr",
+          "status": "detected",
+          "cmp": "didomi",
+          "evidence": [],
+          "unfulfilled": [],
+          "audit": null
+        }
+      ]
+    }
+  },
+  {
+    "id": "FR-10",
+    "country": "FR",
+    "sector": "services",
+    "url": "https://www.doctolib.fr/",
+    "ranAt": "2026-11-11T16:51:13.353Z",
+    "plain": {
+      "httpStatus": 200,
+      "error": null,
+      "title": "Doctolib : Prenez rendez-vous en ligne chez un soignant"
+    },
+    "first": {
+      "httpStatus": 200,
+      "error": null,
+      "title": "Doctolib : Prenez rendez-vous en ligne chez un soignant",
+      "records": [
+        {
+          "domain": "doctolib.fr",
+          "status": "detected",
+          "cmp": "didomi",
+          "evidence": [],
+          "unfulfilled": [],
+          "audit": null
+        }
+      ]
+    },
+    "reload": {
+      "records": [
+        {
+          "domain": "doctolib.fr",
+          "status": "detected",
+          "cmp": "didomi",
+          "evidence": [],
+          "unfulfilled": [],
+          "audit": null
+        }
+      ]
+    }
+  },
+  {
+    "id": "UK-01",
+    "country": "UK",
+    "sector": "media",
+    "url": "https://www.bbc.co.uk/",
+    "ranAt": "2026-11-11T16:52:27.187Z",
+    "plain": {
+      "httpStatus": 200,
+      "error": null,
+      "title": "BBC Home | Breaking News, World News, US News, Sports, Business, Innovation, Climate, Culture, Travel, Video & Audio"
+    },
+    "first": {
+      "httpStatus": 200,
+      "error": null,
+      "title": "BBC Home | Breaking News, World News, US News, Sports, Business, Innovation, Climate, Culture, Travel, Video & Audio",
+      "records": [
+        {
+          "domain": "bbc.com",
+          "status": "verified",
+          "cmp": "Sourcepoint-frame",
+          "evidence": [
+            "tcf_read: confirms — TCF consent and legitimate interest refused for all purposes",
+            "source: read from the page after the banner frame acted"
+          ],
+          "unfulfilled": [],
+          "audit": [
+            {
+              "check": "tracking_before_consent",
+              "outcome": "signal_detected",
+              "count": 1
+            },
+            {
+              "check": "tracking_after_refusal",
+              "outcome": "signal_detected",
+              "count": 7
+            },
+            {
+              "check": "refusal_accessibility",
+              "outcome": "inconclusive",
+              "count": null
+            },
+            {
+              "check": "optional_purposes_preselected",
+              "outcome": "passed",
+              "count": 0
+            },
+            {
+              "check": "consent_information_available",
+              "outcome": "passed",
+              "count": null
+            },
+            {
+              "check": "gpc_behaviour",
+              "outcome": "not_applicable",
+              "count": null
+            }
+          ]
+        }
+      ]
+    },
+    "reload": {
+      "records": [
+        {
+          "domain": "bbc.com",
+          "status": "verified",
+          "cmp": "Sourcepoint-frame",
+          "evidence": [
+            "tcf_read: confirms — TCF consent and legitimate interest refused for all purposes",
+            "source: read from the page after the banner frame acted"
+          ],
+          "unfulfilled": [],
+          "audit": [
+            {
+              "check": "tracking_before_consent",
+              "outcome": "signal_detected",
+              "count": 1
+            },
+            {
+              "check": "tracking_after_refusal",
+              "outcome": "signal_detected",
+              "count": 7
+            },
+            {
+              "check": "refusal_accessibility",
+              "outcome": "inconclusive",
+              "count": null
+            },
+            {
+              "check": "optional_purposes_preselected",
+              "outcome": "passed",
+              "count": 0
+            },
+            {
+              "check": "consent_information_available",
+              "outcome": "passed",
+              "count": null
+            },
+            {
+              "check": "gpc_behaviour",
+              "outcome": "not_applicable",
+              "count": null
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "UK-02",
+    "country": "UK",
+    "sector": "media",
+    "url": "https://www.theguardian.com/uk",
+    "ranAt": "2026-11-11T16:53:16.264Z",
+    "plain": {
+      "httpStatus": 200,
+      "error": null,
+      "title": "Latest news, sport and opinion from the Guardian"
+    },
+    "first": {
+      "httpStatus": 200,
+      "error": null,
+      "title": "Latest news, sport and opinion from the Guardian",
+      "records": [
+        {
+          "domain": "theguardian.com",
+          "status": "detected",
+          "cmp": "Sourcepoint-frame",
+          "evidence": [],
+          "unfulfilled": [],
+          "audit": null
+        }
+      ]
+    },
+    "reload": {
+      "records": [
+        {
+          "domain": "theguardian.com",
+          "status": "detected",
+          "cmp": "Sourcepoint-frame",
+          "evidence": [],
+          "unfulfilled": [],
+          "audit": null
+        }
+      ]
+    }
+  },
+  {
+    "id": "UK-03",
+    "country": "UK",
+    "sector": "retail",
+    "url": "https://www.tesco.com/",
+    "ranAt": "2026-11-11T16:54:29.669Z",
+    "plain": {
+      "httpStatus": 403,
+      "error": null,
+      "title": "Access Denied"
+    },
+    "first": {
+      "httpStatus": 403,
+      "error": null,
+      "title": "Access Denied",
+      "records": []
+    },
+    "reload": {
+      "records": []
+    }
+  },
+  {
+    "id": "UK-04",
+    "country": "UK",
+    "sector": "retail",
+    "url": "https://www.argos.co.uk/",
+    "ranAt": "2026-11-11T16:55:38.717Z",
+    "plain": {
+      "httpStatus": 403,
+      "error": null,
+      "title": "Access Denied"
+    },
+    "first": {
+      "httpStatus": 403,
+      "error": null,
+      "title": "Access Denied",
+      "records": []
+    },
+    "reload": {
+      "records": []
+    }
+  },
+  {
+    "id": "UK-05",
+    "country": "UK",
+    "sector": "ecommerce",
+    "url": "https://www.asos.com/",
+    "ranAt": "2026-11-11T16:56:46.506Z",
+    "plain": {
+      "httpStatus": 403,
+      "error": null,
+      "title": "Access Denied"
+    },
+    "first": {
+      "httpStatus": 403,
+      "error": null,
+      "title": "Access Denied",
+      "records": []
+    },
+    "reload": {
+      "records": []
+    }
+  },
+  {
+    "id": "UK-06",
+    "country": "UK",
+    "sector": "travel",
+    "url": "https://www.britishairways.com/",
+    "ranAt": "2026-11-11T16:57:54.093Z",
+    "plain": {
+      "httpStatus": 200,
+      "error": null,
+      "title": "British Airways - Information Page"
+    },
+    "first": {
+      "httpStatus": 200,
+      "error": null,
+      "title": "British Airways - Information Page",
+      "records": []
+    },
+    "reload": {
+      "records": []
+    }
+  },
+  {
+    "id": "UK-07",
+    "country": "UK",
+    "sector": "travel",
+    "url": "https://www.thetrainline.com/",
+    "ranAt": "2026-11-11T16:59:01.890Z",
+    "plain": {
+      "httpStatus": 200,
+      "error": null,
+      "title": "Trainline : Search, Compare & Buy Cheap Train Tickets"
+    },
+    "first": {
+      "httpStatus": 200,
+      "error": null,
+      "title": "Trainline : Search, Compare & Buy Cheap Train Tickets",
+      "records": [
+        {
+          "domain": "thetrainline.com",
+          "status": "inconclusive",
+          "cmp": "Onetrust",
+          "evidence": [
+            "tcf_read: partial — TCF consent refused; legitimate interest still declared for 6 purposes",
+            "cmp_self_test: contradicts — CMP does not report the refusal as stored"
+          ],
+          "unfulfilled": [],
+          "audit": [
+            {
+              "check": "tracking_before_consent",
+              "outcome": "signal_detected",
+              "count": 4
+            },
+            {
+              "check": "tracking_after_refusal",
+              "outcome": "signal_detected",
+              "count": 4
+            },
+            {
+              "check": "refusal_accessibility",
+              "outcome": "passed",
+              "count": 1
+            },
+            {
+              "check": "optional_purposes_preselected",
+              "outcome": "passed",
+              "count": 0
+            },
+            {
+              "check": "consent_information_available",
+              "outcome": "passed",
+              "count": null
+            },
+            {
+              "check": "gpc_behaviour",
+              "outcome": "not_applicable",
+              "count": null
+            }
+          ]
+        }
+      ]
+    },
+    "reload": {
+      "records": [
+        {
+          "domain": "thetrainline.com",
+          "status": "inconclusive",
+          "cmp": "Onetrust",
+          "evidence": [
+            "tcf_read: partial — TCF consent refused; legitimate interest still declared for 6 purposes",
+            "cmp_self_test: contradicts — CMP does not report the refusal as stored"
+          ],
+          "unfulfilled": [],
+          "audit": [
+            {
+              "check": "tracking_before_consent",
+              "outcome": "signal_detected",
+              "count": 4
+            },
+            {
+              "check": "tracking_after_refusal",
+              "outcome": "signal_detected",
+              "count": 4
+            },
+            {
+              "check": "refusal_accessibility",
+              "outcome": "passed",
+              "count": 1
+            },
+            {
+              "check": "optional_purposes_preselected",
+              "outcome": "passed",
+              "count": 0
+            },
+            {
+              "check": "consent_information_available",
+              "outcome": "passed",
+              "count": null
+            },
+            {
+              "check": "gpc_behaviour",
+              "outcome": "not_applicable",
+              "count": null
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "UK-08",
+    "country": "UK",
+    "sector": "banking",
+    "url": "https://www.barclays.co.uk/",
+    "ranAt": "2026-11-11T16:59:48.217Z",
+    "plain": {
+      "httpStatus": 200,
+      "error": null,
+      "title": "Personal banking | Barclays"
+    },
+    "first": {
+      "httpStatus": 200,
+      "error": null,
+      "title": "Personal banking | Barclays",
+      "records": [
+        {
+          "domain": "barclays.co.uk",
+          "status": "verified",
+          "cmp": "Tealium",
+          "evidence": [
+            "cmp_self_test: confirms — CMP reports the refusal as stored"
+          ],
+          "unfulfilled": [],
+          "audit": [
+            {
+              "check": "tracking_before_consent",
+              "outcome": "passed",
+              "count": null
+            },
+            {
+              "check": "tracking_after_refusal",
+              "outcome": "passed",
+              "count": null
+            },
+            {
+              "check": "refusal_accessibility",
+              "outcome": "passed",
+              "count": 1
+            },
+            {
+              "check": "optional_purposes_preselected",
+              "outcome": "inconclusive",
+              "count": null
+            },
+            {
+              "check": "consent_information_available",
+              "outcome": "inconclusive",
+              "count": null
+            },
+            {
+              "check": "gpc_behaviour",
+              "outcome": "not_applicable",
+              "count": null
+            }
+          ]
+        }
+      ]
+    },
+    "reload": {
+      "records": [
+        {
+          "domain": "barclays.co.uk",
+          "status": "verified",
+          "cmp": "Tealium",
+          "evidence": [
+            "cmp_self_test: confirms — CMP reports the refusal as stored"
+          ],
+          "unfulfilled": [],
+          "audit": [
+            {
+              "check": "tracking_before_consent",
+              "outcome": "passed",
+              "count": null
+            },
+            {
+              "check": "tracking_after_refusal",
+              "outcome": "passed",
+              "count": null
+            },
+            {
+              "check": "refusal_accessibility",
+              "outcome": "passed",
+              "count": 1
+            },
+            {
+              "check": "optional_purposes_preselected",
+              "outcome": "inconclusive",
+              "count": null
+            },
+            {
+              "check": "consent_information_available",
+              "outcome": "inconclusive",
+              "count": null
+            },
+            {
+              "check": "gpc_behaviour",
+              "outcome": "not_applicable",
+              "count": null
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "UK-09",
+    "country": "UK",
+    "sector": "banking",
+    "url": "https://www.hsbc.co.uk/",
+    "ranAt": "2026-11-11T17:00:31.243Z",
+    "plain": {
+      "httpStatus": 200,
+      "error": null,
+      "title": "HSBC UK - Personal Banking, Mortgages, Loans & Bank Accounts"
+    },
+    "first": {
+      "httpStatus": 200,
+      "error": null,
+      "title": "HSBC UK - Personal Banking, Mortgages, Loans & Bank Accounts",
+      "records": [
+        {
+          "domain": "hsbc.co.uk",
+          "status": "verified",
+          "cmp": "Tealium",
+          "evidence": [
+            "cmp_self_test: confirms — CMP reports the refusal as stored"
+          ],
+          "unfulfilled": [],
+          "audit": [
+            {
+              "check": "tracking_before_consent",
+              "outcome": "passed",
+              "count": null
+            },
+            {
+              "check": "tracking_after_refusal",
+              "outcome": "passed",
+              "count": null
+            },
+            {
+              "check": "refusal_accessibility",
+              "outcome": "passed",
+              "count": 1
+            },
+            {
+              "check": "optional_purposes_preselected",
+              "outcome": "inconclusive",
+              "count": null
+            },
+            {
+              "check": "consent_information_available",
+              "outcome": "inconclusive",
+              "count": null
+            },
+            {
+              "check": "gpc_behaviour",
+              "outcome": "not_applicable",
+              "count": null
+            }
+          ]
+        }
+      ]
+    },
+    "reload": {
+      "records": [
+        {
+          "domain": "hsbc.co.uk",
+          "status": "verified",
+          "cmp": "Tealium",
+          "evidence": [
+            "cmp_self_test: confirms — CMP reports the refusal as stored"
+          ],
+          "unfulfilled": [],
+          "audit": [
+            {
+              "check": "tracking_before_consent",
+              "outcome": "passed",
+              "count": null
+            },
+            {
+              "check": "tracking_after_refusal",
+              "outcome": "passed",
+              "count": null
+            },
+            {
+              "check": "refusal_accessibility",
+              "outcome": "passed",
+              "count": 1
+            },
+            {
+              "check": "optional_purposes_preselected",
+              "outcome": "inconclusive",
+              "count": null
+            },
+            {
+              "check": "consent_information_available",
+              "outcome": "inconclusive",
+              "count": null
+            },
+            {
+              "check": "gpc_behaviour",
+              "outcome": "not_applicable",
+              "count": null
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "UK-10",
+    "country": "UK",
+    "sector": "services",
+    "url": "https://www.bt.com/",
+    "ranAt": "2026-11-11T17:01:10.680Z",
+    "plain": {
+      "httpStatus": 200,
+      "error": null,
+      "title": "Broadband, TV Packages, TNT Sports & Mobile Deals | BT"
+    },
+    "first": {
+      "httpStatus": 200,
+      "error": null,
+      "title": "Broadband, TV Packages, TNT Sports & Mobile Deals | BT",
+      "records": [
+        {
+          "domain": "bt.com",
+          "status": "verified",
+          "cmp": "Onetrust",
+          "evidence": [
+            "cmp_self_test: confirms — CMP reports the refusal as stored"
+          ],
+          "unfulfilled": [],
+          "audit": [
+            {
+              "check": "tracking_before_consent",
+              "outcome": "passed",
+              "count": null
+            },
+            {
+              "check": "tracking_after_refusal",
+              "outcome": "signal_detected",
+              "count": 1
+            },
+            {
+              "check": "refusal_accessibility",
+              "outcome": "passed",
+              "count": 1
+            },
+            {
+              "check": "optional_purposes_preselected",
+              "outcome": "inconclusive",
+              "count": null
+            },
+            {
+              "check": "consent_information_available",
+              "outcome": "inconclusive",
+              "count": null
+            },
+            {
+              "check": "gpc_behaviour",
+              "outcome": "not_applicable",
+              "count": null
+            }
+          ]
+        }
+      ]
+    },
+    "reload": {
+      "records": [
+        {
+          "domain": "bt.com",
+          "status": "verified",
+          "cmp": "Onetrust",
+          "evidence": [
+            "cmp_self_test: confirms — CMP reports the refusal as stored"
+          ],
+          "unfulfilled": [],
+          "audit": [
+            {
+              "check": "tracking_before_consent",
+              "outcome": "passed",
+              "count": null
+            },
+            {
+              "check": "tracking_after_refusal",
+              "outcome": "signal_detected",
+              "count": 1
+            },
+            {
+              "check": "refusal_accessibility",
+              "outcome": "passed",
+              "count": 1
+            },
+            {
+              "check": "optional_purposes_preselected",
+              "outcome": "inconclusive",
+              "count": null
+            },
+            {
+              "check": "consent_information_available",
+              "outcome": "inconclusive",
+              "count": null
+            },
+            {
+              "check": "gpc_behaviour",
+              "outcome": "not_applicable",
+              "count": null
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "SA-01",
+    "country": "SA",
+    "sector": "retail",
+    "url": "https://www.extra.com/en-sa",
+    "ranAt": "2026-11-11T17:01:51.090Z",
+    "plain": {
+      "httpStatus": 200,
+      "error": null,
+      "title": "eXtra Saudi Arabia | Buy Electronics with Confidence"
+    },
+    "first": {
+      "httpStatus": 200,
+      "error": null,
+      "title": "eXtra Saudi Arabia | Buy Electronics with Confidence",
+      "records": []
+    },
+    "reload": {
+      "records": []
+    }
+  },
+  {
+    "id": "SA-02",
+    "country": "SA",
+    "sector": "retail",
+    "url": "https://www.jarir.com/",
+    "ranAt": "2026-11-11T17:03:05.946Z",
+    "plain": {
+      "httpStatus": 200,
+      "error": null,
+      "title": "مكتبة جرير، ليست مجرد مكتبة | السعودية"
+    },
+    "first": {
+      "httpStatus": 200,
+      "error": null,
+      "title": "مكتبة جرير، ليست مجرد مكتبة | السعودية",
+      "records": [
+        {
+          "domain": "jarir.com",
+          "status": "verified",
+          "cmp": "consentmanager.net",
+          "evidence": [
+            "cmp_self_test: confirms — CMP reports the refusal as stored"
+          ],
+          "unfulfilled": [],
+          "audit": [
+            {
+              "check": "tracking_before_consent",
+              "outcome": "signal_detected",
+              "count": 4
+            },
+            {
+              "check": "tracking_after_refusal",
+              "outcome": "passed",
+              "count": null
+            },
+            {
+              "check": "refusal_accessibility",
+              "outcome": "inconclusive",
+              "count": null
+            },
+            {
+              "check": "optional_purposes_preselected",
+              "outcome": "inconclusive",
+              "count": null
+            },
+            {
+              "check": "consent_information_available",
+              "outcome": "inconclusive",
+              "count": null
+            },
+            {
+              "check": "gpc_behaviour",
+              "outcome": "not_applicable",
+              "count": null
+            }
+          ]
+        }
+      ]
+    },
+    "reload": {
+      "records": [
+        {
+          "domain": "jarir.com",
+          "status": "verified",
+          "cmp": "consentmanager.net",
+          "evidence": [
+            "cmp_self_test: confirms — CMP reports the refusal as stored"
+          ],
+          "unfulfilled": [],
+          "audit": [
+            {
+              "check": "tracking_before_consent",
+              "outcome": "signal_detected",
+              "count": 4
+            },
+            {
+              "check": "tracking_after_refusal",
+              "outcome": "passed",
+              "count": null
+            },
+            {
+              "check": "refusal_accessibility",
+              "outcome": "inconclusive",
+              "count": null
+            },
+            {
+              "check": "optional_purposes_preselected",
+              "outcome": "inconclusive",
+              "count": null
+            },
+            {
+              "check": "consent_information_available",
+              "outcome": "inconclusive",
+              "count": null
+            },
+            {
+              "check": "gpc_behaviour",
+              "outcome": "not_applicable",
+              "count": null
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "SA-03",
+    "country": "SA",
+    "sector": "ecommerce",
+    "url": "https://www.noon.com/saudi-en/",
+    "ranAt": "2026-11-11T17:04:15.849Z",
+    "plain": {
+      "httpStatus": null,
+      "error": "page.goto: Timeout 45000ms exceeded.",
+      "title": "Loading https://www.noon.com/saudi-en/"
+    },
+    "first": {
+      "httpStatus": null,
+      "error": "page.goto: Timeout 45000ms exceeded.",
+      "title": "Loading https://www.noon.com/saudi-en/",
+      "records": []
+    },
+    "reload": {
+      "records": []
+    }
+  },
+  {
+    "id": "SA-04",
+    "country": "SA",
+    "sector": "travel",
+    "url": "https://www.saudia.com/",
+    "ranAt": "2026-11-11T17:07:53.417Z",
+    "plain": {
+      "httpStatus": null,
+      "error": "page.goto: Timeout 45000ms exceeded.",
+      "title": "Loading https://www.saudia.com/"
+    },
+    "first": {
+      "httpStatus": 200,
+      "error": null,
+      "title": "",
+      "records": []
+    },
+    "reload": {
+      "records": []
+    }
+  },
+  {
+    "id": "SA-05",
+    "country": "SA",
+    "sector": "travel",
+    "url": "https://www.almosafer.com/en",
+    "ranAt": "2026-11-11T17:10:02.163Z",
+    "plain": {
+      "httpStatus": 200,
+      "error": null,
+      "title": "Almosafer: Flights, Hotels, Activities, Transfers, Car Rentals & More"
+    },
+    "first": {
+      "httpStatus": 200,
+      "error": null,
+      "title": "Almosafer: Flights, Hotels, Activities, Transfers, Car Rentals & More",
+      "records": []
+    },
+    "reload": {
+      "records": []
+    }
+  },
+  {
+    "id": "SA-06",
+    "country": "SA",
+    "sector": "banking",
+    "url": "https://www.alrajhibank.com.sa/en",
+    "ranAt": "2026-11-11T17:11:22.401Z",
+    "plain": {
+      "httpStatus": 200,
+      "error": null,
+      "title": "Personal | alrajhi bank"
+    },
+    "first": {
+      "httpStatus": 200,
+      "error": null,
+      "title": "Personal | alrajhi bank",
+      "records": []
+    },
+    "reload": {
+      "records": []
+    }
+  },
+  {
+    "id": "SA-07",
+    "country": "SA",
+    "sector": "banking",
+    "url": "https://www.alahli.com/en",
+    "ranAt": "2026-11-11T17:12:39.385Z",
+    "plain": {
+      "httpStatus": 200,
+      "error": null,
+      "title": "Personal Banking | Saudi National Bank"
+    },
+    "first": {
+      "httpStatus": 200,
+      "error": null,
+      "title": "Personal Banking | Saudi National Bank",
+      "records": []
+    },
+    "reload": {
+      "records": []
+    }
+  },
+  {
+    "id": "SA-08",
+    "country": "SA",
+    "sector": "services",
+    "url": "https://www.stc.com.sa/",
+    "ranAt": "2026-11-11T17:14:04.391Z",
+    "plain": {
+      "httpStatus": 500,
+      "error": null,
+      "title": "The URL you requested has been blocked"
+    },
+    "first": {
+      "httpStatus": 500,
+      "error": null,
+      "title": "The URL you requested has been blocked",
+      "records": []
+    },
+    "reload": {
+      "records": []
+    }
+  },
+  {
+    "id": "SA-09",
+    "country": "SA",
+    "sector": "media",
+    "url": "https://www.arabnews.com/",
+    "ranAt": "2026-11-11T17:15:12.657Z",
+    "plain": {
+      "httpStatus": 200,
+      "error": null,
+      "title": "Arab News | Worldwide News, Latest Breaking News & Updates"
+    },
+    "first": {
+      "httpStatus": 200,
+      "error": null,
+      "title": "Arab News | Worldwide News, Latest Breaking News & Updates",
+      "records": []
+    },
+    "reload": {
+      "records": []
+    }
+  },
+  {
+    "id": "SA-10",
+    "country": "SA",
+    "sector": "media",
+    "url": "https://www.okaz.com.sa/",
+    "ranAt": "2026-11-11T17:16:23.370Z",
+    "plain": {
+      "httpStatus": 403,
+      "error": null,
+      "title": "ERROR: The request could not be satisfied"
+    },
+    "first": {
+      "httpStatus": 403,
+      "error": null,
+      "title": "ERROR: The request could not be satisfied",
+      "records": []
+    },
+    "reload": {
+      "records": []
+    }
+  }
+]

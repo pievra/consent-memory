@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="en-GB">
+  <head><meta charset="utf-8" /><title>Fixture: Sourcepoint style message frame with an "accept or pay" wall</title></head>
+  <body>
+    <!-- Served as /index.html?message_id=1 so the engine's Sourcepoint frame rule recognises it.
+         Choice type 11 is "accept all", 9 is the pay or subscribe action. ?free adds a free refusal (13). -->
+    <p>We care about your privacy</p>
+    <button class="sp_choice_type_11" onclick="__clicks.accept++">Accept all</button>
+    <button class="sp_choice_type_9" onclick="__clicks.pay++">Reject all and subscribe</button>
+    <script>
+      window.__clicks = { accept: 0, pay: 0 };
+    </script>
+  </body>
+</html>

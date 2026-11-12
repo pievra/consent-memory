@@ -1,0 +1,6 @@
+{
+  "extDescription": {
+    "message": "Refuses optional cookies on recognised banners, checks the refusal was stored, and remembers it. Your choices stay on your device.",
+    "description": "Extension description shown in the browser and the store. Maximum 132 characters."
+  }
+}

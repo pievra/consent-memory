@@ -1,0 +1,22 @@
+body { width: 380px; max-width: 100%; }
+#app { padding: var(--s4); display: grid; gap: var(--s4); }
+#app > .brand { padding-bottom: var(--s3); border-bottom: 1px solid var(--line); }
+header .eyebrow { font-size: 12px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); }
+header h1 { font-size: 20px; overflow-wrap: anywhere; }
+.result { display: grid; gap: var(--s1); }
+.result .status { font-size: 17px; white-space: normal; }
+section > h2 { font-size: 16px; margin-bottom: var(--s1); }
+.choices { border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); }
+.choices > summary { list-style: none; cursor: pointer; min-height: 44px; padding: var(--s2) var(--s3); display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 0 var(--s3); border-radius: var(--radius); }
+.choices > summary::-webkit-details-marker { display: none; }
+.choices-title { font-weight: 600; } .choices-now { grid-column: 1; color: var(--muted); font-size: 13px; }
+.choices-open { grid-column: 2; grid-row: 1 / span 2; color: var(--link); font-weight: 600; font-size: 14px; }
+.choices-open::after { content: ' ▾'; } .choices[open] .choices-open::after { content: ' ▴'; }
+.choices[open] { padding: 0 var(--s3) var(--s3); } .choices[open] > summary { margin: 0 calc(-1 * var(--s3)); border-bottom: 1px solid var(--line); border-radius: var(--radius) var(--radius) 0 0; margin-bottom: var(--s3); }
+.footer { display: grid; gap: var(--s2); }
+/* The popup is narrow: the three way control sits under its label and shares the full width. */
+.purpose { grid-template-columns: 1fr; }
+.segmented { grid-column: 1; display: flex; width: 100%; }
+.segmented label { flex: 1 1 0; min-width: 0; }
+.segmented label:first-child { flex: 1.5 1 0; }
+.segmented span { text-align: center; white-space: normal; line-height: 1.25; display: flex; align-items: center; justify-content: center; padding: var(--s1) var(--s2); }

@@ -1,0 +1,44 @@
+{
+  "name": "consent-memory",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Browser extension that applies, remembers and verifies website privacy preferences.",
+  "license": "MPL-2.0",
+  "type": "module",
+  "packageManager": "pnpm@12.18.0",
+  "engines": {
+    "node": ">=22.12"
+  },
+  "scripts": {
+    "dev": "wxt",
+    "build": "wxt build",
+    "zip": "wxt zip",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "test:e2e": "playwright test",
+    "check:bundle": "node scripts/check-bundle.mjs",
+    "check:secrets": "node scripts/check-secrets.mjs",
+    "sbom": "pnpm sbom --sbom-format cyclonedx --sbom-type application --prod --lockfile-only --out sbom.cdx.json",
+    "panel": "node scripts/run-panel.mjs",
+    "postinstall": "wxt prepare"
+  },
+  "dependencies": {
+    "@duckduckgo/autoconsent": "18.1.0",
+    "preact": "11.2.0",
+    "tldts": "7.4.19",
+    "zod": "4.6.7"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "4.14.0",
+    "@playwright/test": "1.65.0",
+    "@types/chrome": "0.3.7",
+    "@types/node": "^22.20.5",
+    "eslint": "10.14.0",
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.72.1",
+    "vite": "^7.3.8",
+    "vitest": "5.1.0",
+    "wxt": "0.21.5"
+  }
+}

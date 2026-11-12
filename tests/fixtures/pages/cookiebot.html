@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en-GB">
+  <head><meta charset="utf-8" /><title>Fixture: Cookiebot style banner</title></head>
+  <body>
+    <h1>Fixture travel</h1>
+    <!-- Simulated markup and API surface only; no vendor code. Detection and verification both go through the page API. -->
+    <div id="CybotCookiebotDialog" role="dialog">
+      <p>This website uses cookies.</p>
+      <button id="CybotCookiebotDialogBodyLevelButtonLevelOptinDeclineAll" data-test-role="reject">Deny</button>
+      <button id="CybotCookiebotDialogBodyButtonAccept" data-test-role="accept">Allow all</button>
+    </div>
+    <script>
+      window.__clicks = { accept: 0, reject: 0 };
+      const dialog = document.getElementById('CybotCookiebotDialog');
+      window.Cookiebot = {
+        hasResponse: false, declined: false, consented: false, dialog: { visible: true },
+        withdraw() { this.declined = true; this.hasResponse = true; }, hide() { dialog.remove(); this.dialog.visible = false; },
+      };
+      document.getElementById('CybotCookiebotDialogBodyLevelButtonLevelOptinDeclineAll').addEventListener('click', () => {
+        window.__clicks.reject++; window.Cookiebot.withdraw(); window.Cookiebot.hide();
+      });
+      document.getElementById('CybotCookiebotDialogBodyButtonAccept').addEventListener('click', () => {
+        window.__clicks.accept++; window.Cookiebot.consented = true; window.Cookiebot.hasResponse = true; window.Cookiebot.hide();
+      });
+    </script>
+  </body>
+</html>

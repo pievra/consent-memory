@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en-GB">
+  <head><meta charset="utf-8" /><title>Fixture: OneTrust style banner</title></head>
+  <body>
+    <h1>Fixture shop</h1>
+    <main id="app"></main>
+    <script>
+      // Simulated markup and API surface only; no vendor code. Behaviour is selected by query string:
+      //   ?forget=1  the CMP hides the banner on refusal but keeps optional groups active
+      //   ?tcf=li    a TCF API reports consent refused, legitimate interest still declared
+      //   ?login=1   the page has a password field the user has already typed into
+      //   ?reload=1  the page reloads itself as soon as the refusal is stored
+      //   ?track=…   see below
+      const q = new URLSearchParams(location.search);
+      window.__clicks = { accept: 0, reject: 0 };
+      // ?track=before|after|both  the page contacts a (test only) listed tracking service
+      const track = q.get('track') || '';
+      const beacon = (label) => { new Image().src = `http://fixture-tracker.localhost:${location.port}/pixel.gif?${label}`; };
+      if (track === 'before' || track === 'both') beacon('before');
+      const ALL = ',C0001,C0002,C0003,C0004,';
+      const stored = document.cookie.includes('fixtureConsent=refused');
+      window.OnetrustActiveGroups = stored ? ',C0001,' : ALL;
+      let tcfStatus = stored ? 'tcloaded' : 'cmpuishown';
+      if (q.get('tcf') === 'li') {
+        window.__tcfapi = (command, version, callback, arg) => {
+          if (command === 'addEventListener') {
+            const refused = window.OnetrustActiveGroups === ',C0001,';
+            callback({ eventStatus: tcfStatus, listenerId: 1, purpose: {
+              consents: refused ? {} : { 1: true, 2: true },
+              legitimateInterests: { 2: true, 7: true, 9: true, 10: true },
+            } }, true);
+          } else if (command === 'removeEventListener') { callback(true, true); }
+        };
+      }
+      if (q.get('login') === '1') {
+        document.getElementById('app').innerHTML = '<form id="login" action="/submitted"><input type="password" id="pw" value="hunter2" /><button>Log in</button></form>';
+      }
+      if (stored) {
+        // Like the real product, the container stays in the page, hidden, once a choice is stored.
+        const hidden = document.createElement('div');
+        hidden.id = 'onetrust-banner-sdk';
+        hidden.style.display = 'none';
+        document.body.appendChild(hidden);
+      }
+      if (!stored) {
+        const banner = document.createElement('div');
+        banner.id = 'onetrust-banner-sdk';
+        banner.setAttribute('role', 'dialog');
+        banner.innerHTML = '<p>We use cookies.</p><button id="onetrust-accept-btn-handler" data-test-role="accept">Accept all</button> <button id="onetrust-reject-all-handler" data-test-role="reject">Reject all</button>';
+        document.body.appendChild(banner);
+        document.getElementById('onetrust-accept-btn-handler').addEventListener('click', () => { window.__clicks.accept++; banner.remove(); });
+        document.getElementById('onetrust-reject-all-handler').addEventListener('click', () => {
+          window.__clicks.reject++;
+          if (q.get('forget') !== '1') {
+            window.OnetrustActiveGroups = ',C0001,';
+            document.cookie = 'fixtureConsent=refused; path=/; max-age=3600';
+          }
+          tcfStatus = 'useractioncomplete';
+          banner.remove();
+          if (track === 'after' || track === 'both') setTimeout(() => beacon('after'), 1500);
+          if (q.get('reload') === '1') location.reload(); // like sites that reload once a choice is made
+        });
+      }
+    </script>
+  </body>
+</html>

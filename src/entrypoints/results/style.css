@@ -1,0 +1,54 @@
+:root {
+  --bg: #fbfaf7; --surface: #ffffff; --ink: #1c1b19; --muted: #5d5a54; --line: #dedad2; --accent: #18181b;
+  --ok: #1f6b45; --warn: #8a5a00; --bad: #a1271f; --neutral: #4b4a47;
+  color-scheme: light dark;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --bg: #151614; --surface: #1d1e1b; --ink: #ecebe6; --muted: #a9a69d; --line: #34352f; --accent: #f4f4f5;
+    --ok: #7fd3a4; --warn: #e6b65c; --bad: #f0928a; --neutral: #c2c0b8; }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 ui-sans-serif, system-ui, "Segoe UI", sans-serif; }
+main { max-width: 1040px; margin: 0 auto; padding: 40px 16px 64px; }
+.eyebrow { margin: 0 0 8px; font-size: 13px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); }
+h1 { margin: 0 0 8px; font: 600 30px/1.2 ui-serif, Georgia, serif; letter-spacing: -0.01em; }
+h2 { margin: 48px 0 12px; font: 600 20px/1.3 ui-serif, Georgia, serif; }
+.lede { margin: 0 0 24px; max-width: 62ch; color: var(--muted); }
+.actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-bottom: 24px; }
+button { min-height: 44px; padding: 0 18px; border-radius: 6px; border: 1px solid var(--accent); background: var(--accent); color: var(--bg); font: inherit; font-weight: 600; cursor: pointer; }
+button.quiet { background: transparent; color: var(--accent); }
+button:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+#summary { color: var(--muted); font-size: 14px; margin: 0; }
+.send { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 20px 24px; margin-bottom: 24px; max-width: 72ch; }
+.send h2 { margin: 0 0 8px; font-size: 18px; } .send ol { margin: 0 0 16px; padding-left: 20px; } .send li + li { margin-top: 4px; }
+.send .actions { margin-bottom: 12px; } .send .option { margin: 0 0 8px; color: var(--muted); font-size: 14px; }
+code { font: 14px ui-monospace, Menlo, monospace; }
+.table-wrap { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 15px; }
+th, td { text-align: left; padding: 12px 16px; border-bottom: 1px solid var(--line); vertical-align: top; }
+thead th { font-size: 13px; font-weight: 600; color: var(--muted); white-space: nowrap; }
+tbody tr:last-child td { border-bottom: 0; }
+td.site { font-weight: 600; min-width: 20ch; overflow-wrap: break-word; }
+td.evidence { color: var(--muted); font-size: 14px; min-width: 22ch; }
+td.evidence ul { margin: 0; padding-left: 18px; }
+.status { display: inline-block; font-weight: 600; white-space: nowrap; }
+.status::before { content: attr(data-mark) " "; }
+.status[data-tone="ok"] { color: var(--ok); } .status[data-tone="warn"] { color: var(--warn); }
+.status[data-tone="bad"] { color: var(--bad); } .status[data-tone="neutral"] { color: var(--neutral); }
+#empty { margin: 0; padding: 24px 16px; color: var(--muted); }
+dl { display: grid; grid-template-columns: max-content 1fr; gap: 8px 20px; margin: 0; max-width: 78ch; }
+dt { font-weight: 600; } dd { margin: 0; color: var(--muted); }
+.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+@media (max-width: 640px) {
+  main { padding-top: 24px; } h1 { font-size: 24px; }
+  thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+  table, tbody, tr, td { display: block; width: 100%; }
+  tr { padding: 12px 0; border-bottom: 1px solid var(--line); } tbody tr:last-child { border-bottom: 0; }
+  td { border: 0; padding: 2px 16px; }
+  td[data-label]:not(.site)::before { content: attr(data-label) ": "; color: var(--muted); font-size: 13px; }
+  dl { grid-template-columns: 1fr; gap: 2px; } dd { margin-bottom: 10px; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+
+.option { display: flex; gap: 8px; align-items: flex-start; font-size: 14px; max-width: 60ch; }
+.option input { width: 20px; height: 20px; margin: 1px 0 0; flex: none; }

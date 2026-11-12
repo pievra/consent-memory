@@ -1,0 +1,751 @@
+{
+  "format": "consent-memory-test-results",
+  "formatVersion": 1,
+  "exportedAt": "2026-11-11T22:32:59.816Z",
+  "extensionVersion": "0.1.0",
+  "engine": "autoconsent 18.1.0",
+  "siteNames": "removed",
+  "browser": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/157.0.0.0 Safari/537.36",
+  "sites": [
+    {
+      "domain": "site-1",
+      "cmp": "Sourcepoint-frame",
+      "cmpRuleVersion": "18.1.0",
+      "engine": "autoconsent",
+      "choices": {
+        "storage": "refuse",
+        "preferences": "refuse",
+        "analytics": "refuse",
+        "content": "refuse",
+        "advertising": "refuse",
+        "other": "refuse"
+      },
+      "setBy": {
+        "storage": "default",
+        "preferences": "default",
+        "analytics": "default",
+        "content": "default",
+        "advertising": "default",
+        "other": "default"
+      },
+      "status": "partial",
+      "paused": false,
+      "lastAttempted": "2026-11-11T22:10:33.965Z",
+      "attemptOrigin": "other_site_frame",
+      "evidenceSummary": [
+        "tcf_read: partial — TCF consent refused; legitimate interest still declared for 5 purposes",
+        "source: read from the page after the banner frame acted"
+      ],
+      "unfulfilled": [
+        "storage",
+        "preferences"
+      ],
+      "audit": {
+        "schemaVersion": 1,
+        "trackerListVersion": "2026.11.2",
+        "trackersKnown": 65,
+        "observedAt": "2026-11-11T22:00:00.000Z",
+        "checks": [
+          {
+            "check": "tracking_before_consent",
+            "outcome": "passed"
+          },
+          {
+            "check": "tracking_after_refusal",
+            "outcome": "signal_detected",
+            "services": [
+              "amazon-adsystem.com",
+              "doubleclick.net",
+              "googlesyndication.com"
+            ],
+            "count": 3
+          },
+          {
+            "check": "refusal_accessibility",
+            "outcome": "inconclusive"
+          },
+          {
+            "check": "optional_purposes_preselected",
+            "outcome": "passed",
+            "count": 0
+          },
+          {
+            "check": "consent_information_available",
+            "outcome": "passed"
+          },
+          {
+            "check": "gpc_behaviour",
+            "outcome": "not_applicable"
+          }
+        ]
+      },
+      "mappingVersion": 2,
+      "schemaVersion": 1
+    },
+    {
+      "domain": "site-2",
+      "cmp": "quantcast",
+      "cmpRuleVersion": "18.1.0",
+      "engine": "autoconsent",
+      "choices": {
+        "storage": "refuse",
+        "preferences": "refuse",
+        "analytics": "refuse",
+        "content": "refuse",
+        "advertising": "refuse",
+        "other": "refuse"
+      },
+      "setBy": {
+        "storage": "default",
+        "preferences": "default",
+        "analytics": "default",
+        "content": "default",
+        "advertising": "default",
+        "other": "default"
+      },
+      "status": "partial",
+      "paused": false,
+      "lastAttempted": "2026-11-11T22:10:02.084Z",
+      "attemptOrigin": "site",
+      "evidenceSummary": [
+        "tcf_read: partial — TCF consent refused; legitimate interest still declared for 6 purposes"
+      ],
+      "unfulfilled": [
+        "storage",
+        "preferences"
+      ],
+      "audit": {
+        "schemaVersion": 1,
+        "trackerListVersion": "2026.11.2",
+        "trackersKnown": 65,
+        "observedAt": "2026-11-11T22:00:00.000Z",
+        "checks": [
+          {
+            "check": "tracking_before_consent",
+            "outcome": "signal_detected",
+            "services": [
+              "amazon-adsystem.com",
+              "amplitude.com",
+              "chartbeat.com",
+              "crwdcntrl.net",
+              "doubleclick.net",
+              "piano.io",
+              "pubmatic.com",
+              "taboola.com"
+            ],
+            "count": 8
+          },
+          {
+            "check": "tracking_after_refusal",
+            "outcome": "signal_detected",
+            "services": [
+              "amazon-adsystem.com",
+              "amplitude.com",
+              "chartbeat.com",
+              "chartbeat.net",
+              "crwdcntrl.net",
+              "doubleclick.net",
+              "googlesyndication.com",
+              "id5-sync.com",
+              "piano.io",
+              "quantserve.com"
+            ],
+            "count": 13
+          },
+          {
+            "check": "refusal_accessibility",
+            "outcome": "signal_detected",
+            "count": 3
+          },
+          {
+            "check": "optional_purposes_preselected",
+            "outcome": "passed",
+            "count": 0
+          },
+          {
+            "check": "consent_information_available",
+            "outcome": "passed"
+          },
+          {
+            "check": "gpc_behaviour",
+            "outcome": "inconclusive"
+          }
+        ]
+      },
+      "mappingVersion": 2,
+      "schemaVersion": 1
+    },
+    {
+      "domain": "site-3",
+      "cmp": "quantcast",
+      "cmpRuleVersion": "18.1.0",
+      "engine": "autoconsent",
+      "choices": {
+        "storage": "refuse",
+        "preferences": "refuse",
+        "analytics": "refuse",
+        "content": "refuse",
+        "advertising": "refuse",
+        "other": "refuse"
+      },
+      "setBy": {
+        "storage": "default",
+        "preferences": "default",
+        "analytics": "default",
+        "content": "default",
+        "advertising": "default",
+        "other": "default"
+      },
+      "status": "partial",
+      "paused": false,
+      "lastAttempted": "2026-11-11T22:08:20.567Z",
+      "attemptOrigin": "site",
+      "evidenceSummary": [
+        "tcf_read: partial — TCF consent refused; legitimate interest still declared for 6 purposes"
+      ],
+      "unfulfilled": [
+        "storage",
+        "preferences"
+      ],
+      "audit": {
+        "schemaVersion": 1,
+        "trackerListVersion": "2026.11.2",
+        "trackersKnown": 65,
+        "observedAt": "2026-11-11T22:00:00.000Z",
+        "checks": [
+          {
+            "check": "tracking_before_consent",
+            "outcome": "signal_detected",
+            "services": [
+              "amplitude.com",
+              "doubleclick.net",
+              "googlesyndication.com",
+              "scorecardresearch.com",
+              "taboola.com"
+            ],
+            "count": 5
+          },
+          {
+            "check": "tracking_after_refusal",
+            "outcome": "signal_detected",
+            "services": [
+              "amplitude.com",
+              "chartbeat.com",
+              "chartbeat.net",
+              "crwdcntrl.net",
+              "googlesyndication.com",
+              "taboola.com"
+            ],
+            "count": 6
+          },
+          {
+            "check": "refusal_accessibility",
+            "outcome": "signal_detected",
+            "count": 3
+          },
+          {
+            "check": "optional_purposes_preselected",
+            "outcome": "passed",
+            "count": 0
+          },
+          {
+            "check": "consent_information_available",
+            "outcome": "passed"
+          },
+          {
+            "check": "gpc_behaviour",
+            "outcome": "inconclusive"
+          }
+        ]
+      },
+      "mappingVersion": 2,
+      "schemaVersion": 1
+    },
+    {
+      "domain": "site-4",
+      "cmp": "Onetrust",
+      "cmpRuleVersion": "18.1.0",
+      "engine": "autoconsent",
+      "choices": {
+        "storage": "refuse",
+        "preferences": "refuse",
+        "analytics": "refuse",
+        "content": "refuse",
+        "advertising": "refuse",
+        "other": "refuse"
+      },
+      "setBy": {
+        "storage": "default",
+        "preferences": "default",
+        "analytics": "default",
+        "content": "default",
+        "advertising": "default",
+        "other": "default"
+      },
+      "status": "partial",
+      "paused": false,
+      "lastAttempted": "2026-11-11T22:03:29.033Z",
+      "attemptOrigin": "site",
+      "evidenceSummary": [
+        "cmp_self_test: confirms — CMP reports the refusal as stored",
+        "tcf_read: confirms — TCF consent and legitimate interest refused for all purposes"
+      ],
+      "unfulfilled": [
+        "storage",
+        "preferences"
+      ],
+      "audit": {
+        "schemaVersion": 1,
+        "trackerListVersion": "2026.11.2",
+        "trackersKnown": 65,
+        "observedAt": "2026-11-11T22:00:00.000Z",
+        "checks": [
+          {
+            "check": "tracking_before_consent",
+            "outcome": "signal_detected",
+            "services": [
+              "nr-data.net"
+            ],
+            "count": 1
+          },
+          {
+            "check": "tracking_after_refusal",
+            "outcome": "signal_detected",
+            "services": [
+              "googlesyndication.com",
+              "nr-data.net"
+            ],
+            "count": 2
+          },
+          {
+            "check": "refusal_accessibility",
+            "outcome": "passed",
+            "count": 1
+          },
+          {
+            "check": "optional_purposes_preselected",
+            "outcome": "passed",
+            "count": 0
+          },
+          {
+            "check": "consent_information_available",
+            "outcome": "passed"
+          },
+          {
+            "check": "gpc_behaviour",
+            "outcome": "not_applicable"
+          }
+        ]
+      },
+      "mappingVersion": 2,
+      "schemaVersion": 1
+    },
+    {
+      "domain": "site-5",
+      "cmp": "Sourcepoint-frame",
+      "cmpRuleVersion": "18.1.0",
+      "engine": "autoconsent",
+      "choices": {
+        "storage": "refuse",
+        "preferences": "refuse",
+        "analytics": "refuse",
+        "content": "refuse",
+        "advertising": "refuse",
+        "other": "refuse"
+      },
+      "setBy": {
+        "storage": "default",
+        "preferences": "default",
+        "analytics": "default",
+        "content": "default",
+        "advertising": "default",
+        "other": "default"
+      },
+      "status": "partial",
+      "paused": false,
+      "lastAttempted": "2026-11-11T21:59:51.429Z",
+      "attemptOrigin": "site",
+      "evidenceSummary": [
+        "tcf_read: confirms — TCF consent and legitimate interest refused for all purposes",
+        "source: read from the page after the banner frame acted"
+      ],
+      "unfulfilled": [
+        "storage",
+        "preferences"
+      ],
+      "audit": {
+        "schemaVersion": 1,
+        "trackerListVersion": "2026.11.2",
+        "trackersKnown": 65,
+        "observedAt": "2026-11-11T22:00:00.000Z",
+        "checks": [
+          {
+            "check": "tracking_before_consent",
+            "outcome": "signal_detected",
+            "services": [
+              "amazon-adsystem.com",
+              "doubleclick.net",
+              "google-analytics.com",
+              "googlesyndication.com",
+              "scorecardresearch.com"
+            ],
+            "count": 5
+          },
+          {
+            "check": "tracking_after_refusal",
+            "outcome": "signal_detected",
+            "services": [
+              "doubleclick.net",
+              "google-analytics.com",
+              "googlesyndication.com",
+              "nr-data.net",
+              "scorecardresearch.com"
+            ],
+            "count": 5
+          },
+          {
+            "check": "refusal_accessibility",
+            "outcome": "inconclusive"
+          },
+          {
+            "check": "optional_purposes_preselected",
+            "outcome": "passed",
+            "count": 0
+          },
+          {
+            "check": "consent_information_available",
+            "outcome": "passed"
+          },
+          {
+            "check": "gpc_behaviour",
+            "outcome": "not_applicable"
+          }
+        ]
+      },
+      "mappingVersion": 2,
+      "schemaVersion": 1
+    },
+    {
+      "domain": "site-6",
+      "cmp": "Cybotcookiebot",
+      "cmpRuleVersion": "18.1.0",
+      "engine": "autoconsent",
+      "choices": {
+        "storage": "refuse",
+        "preferences": "refuse",
+        "analytics": "refuse",
+        "content": "refuse",
+        "advertising": "refuse",
+        "other": "refuse"
+      },
+      "setBy": {
+        "storage": "default",
+        "preferences": "default",
+        "analytics": "default",
+        "content": "default",
+        "advertising": "default",
+        "other": "default"
+      },
+      "status": "verified",
+      "paused": false,
+      "lastAttempted": "2026-11-11T21:58:42.700Z",
+      "attemptOrigin": "site",
+      "lastVerified": "2026-11-11T21:58:42.700Z",
+      "evidenceSummary": [
+        "cmp_state_read: confirms — CMP reports your choice for each of its 3 purposes"
+      ],
+      "unfulfilled": [],
+      "audit": {
+        "schemaVersion": 1,
+        "trackerListVersion": "2026.11.2",
+        "trackersKnown": 65,
+        "observedAt": "2026-11-11T21:00:00.000Z",
+        "checks": [
+          {
+            "check": "tracking_before_consent",
+            "outcome": "signal_detected",
+            "services": [
+              "bat.bing.com",
+              "clarity.ms"
+            ],
+            "count": 2
+          },
+          {
+            "check": "tracking_after_refusal",
+            "outcome": "not_applicable"
+          },
+          {
+            "check": "refusal_accessibility",
+            "outcome": "not_applicable"
+          },
+          {
+            "check": "optional_purposes_preselected",
+            "outcome": "inconclusive"
+          },
+          {
+            "check": "consent_information_available",
+            "outcome": "inconclusive"
+          },
+          {
+            "check": "gpc_behaviour",
+            "outcome": "inconclusive"
+          }
+        ]
+      },
+      "mappingVersion": 2,
+      "schemaVersion": 1
+    },
+    {
+      "domain": "site-7",
+      "cmp": "didomi",
+      "cmpRuleVersion": "18.1.0",
+      "engine": "autoconsent",
+      "choices": {
+        "storage": "refuse",
+        "preferences": "refuse",
+        "analytics": "refuse",
+        "content": "refuse",
+        "advertising": "refuse",
+        "other": "refuse"
+      },
+      "setBy": {
+        "storage": "user",
+        "preferences": "user",
+        "analytics": "user",
+        "content": "user",
+        "advertising": "user",
+        "other": "user"
+      },
+      "status": "partial",
+      "paused": false,
+      "lastAttempted": "2026-11-11T20:56:35.218Z",
+      "attemptOrigin": "site",
+      "evidenceSummary": [
+        "cmp_self_test: confirms — CMP reports the refusal as stored",
+        "tcf_read: partial — TCF consent refused; legitimate interest still declared for 6 purposes"
+      ],
+      "unfulfilled": [
+        "storage",
+        "preferences"
+      ],
+      "mappingVersion": 2,
+      "schemaVersion": 1
+    },
+    {
+      "domain": "site-8",
+      "cmp": "tesco",
+      "cmpRuleVersion": "18.1.0",
+      "engine": "autoconsent",
+      "choices": {
+        "storage": "refuse",
+        "preferences": "refuse",
+        "analytics": "refuse",
+        "content": "refuse",
+        "advertising": "refuse",
+        "other": "refuse"
+      },
+      "setBy": {
+        "storage": "user",
+        "preferences": "user",
+        "analytics": "user",
+        "content": "user",
+        "advertising": "user",
+        "other": "user"
+      },
+      "status": "attempted",
+      "paused": false,
+      "lastAttempted": "2026-11-11T20:56:22.629Z",
+      "attemptOrigin": "site",
+      "evidenceSummary": [],
+      "unfulfilled": [
+        "storage",
+        "preferences"
+      ],
+      "mappingVersion": 2,
+      "schemaVersion": 1
+    },
+    {
+      "domain": "site-9",
+      "cmp": "bbc.com",
+      "cmpRuleVersion": "18.1.0",
+      "engine": "autoconsent",
+      "choices": {
+        "storage": "refuse",
+        "preferences": "refuse",
+        "analytics": "refuse",
+        "content": "refuse",
+        "advertising": "refuse",
+        "other": "refuse"
+      },
+      "setBy": {
+        "storage": "default",
+        "preferences": "default",
+        "analytics": "default",
+        "content": "default",
+        "advertising": "default",
+        "other": "default"
+      },
+      "status": "verified",
+      "paused": false,
+      "lastAttempted": "2026-11-11T20:53:21.244Z",
+      "attemptOrigin": "site",
+      "lastVerified": "2026-11-11T20:53:21.244Z",
+      "evidenceSummary": [
+        "cmp_self_test: confirms — CMP reports the refusal as stored"
+      ],
+      "unfulfilled": [],
+      "audit": {
+        "schemaVersion": 1,
+        "trackerListVersion": "2026.11.2",
+        "trackersKnown": 65,
+        "observedAt": "2026-11-11T20:00:00.000Z",
+        "checks": [
+          {
+            "check": "tracking_before_consent",
+            "outcome": "signal_detected",
+            "services": [
+              "chartbeat.com",
+              "chartbeat.net",
+              "scorecardresearch.com"
+            ],
+            "count": 3
+          },
+          {
+            "check": "tracking_after_refusal",
+            "outcome": "inconclusive"
+          },
+          {
+            "check": "refusal_accessibility",
+            "outcome": "inconclusive"
+          },
+          {
+            "check": "optional_purposes_preselected",
+            "outcome": "inconclusive"
+          },
+          {
+            "check": "consent_information_available",
+            "outcome": "inconclusive"
+          },
+          {
+            "check": "gpc_behaviour",
+            "outcome": "not_applicable"
+          }
+        ]
+      },
+      "mappingVersion": 2,
+      "schemaVersion": 1
+    },
+    {
+      "domain": "site-10",
+      "cmp": "Sourcepoint-frame",
+      "cmpRuleVersion": "18.1.0",
+      "engine": "autoconsent",
+      "choices": {
+        "storage": "refuse",
+        "preferences": "refuse",
+        "analytics": "refuse",
+        "content": "refuse",
+        "advertising": "refuse",
+        "other": "refuse"
+      },
+      "setBy": {
+        "storage": "default",
+        "preferences": "default",
+        "analytics": "default",
+        "content": "default",
+        "advertising": "default",
+        "other": "default"
+      },
+      "status": "detected",
+      "paused": false,
+      "evidenceSummary": [],
+      "unfulfilled": [],
+      "mappingVersion": 2,
+      "schemaVersion": 1
+    },
+    {
+      "domain": "site-11",
+      "cmp": "AppConsent",
+      "cmpRuleVersion": "18.1.0",
+      "engine": "autoconsent",
+      "choices": {
+        "storage": "refuse",
+        "preferences": "refuse",
+        "analytics": "refuse",
+        "content": "refuse",
+        "advertising": "refuse",
+        "other": "refuse"
+      },
+      "setBy": {
+        "storage": "default",
+        "preferences": "default",
+        "analytics": "default",
+        "content": "default",
+        "advertising": "default",
+        "other": "default"
+      },
+      "status": "detected",
+      "paused": false,
+      "evidenceSummary": [],
+      "unfulfilled": [],
+      "mappingVersion": 2,
+      "schemaVersion": 1
+    },
+    {
+      "domain": "site-12",
+      "cmp": "Sourcepoint-frame",
+      "cmpRuleVersion": "18.1.0",
+      "engine": "autoconsent",
+      "choices": {
+        "storage": "refuse",
+        "preferences": "refuse",
+        "analytics": "refuse",
+        "content": "refuse",
+        "advertising": "refuse",
+        "other": "refuse"
+      },
+      "setBy": {
+        "storage": "default",
+        "preferences": "default",
+        "analytics": "default",
+        "content": "default",
+        "advertising": "default",
+        "other": "default"
+      },
+      "status": "detected",
+      "paused": false,
+      "evidenceSummary": [],
+      "unfulfilled": [],
+      "mappingVersion": 2,
+      "schemaVersion": 1
+    },
+    {
+      "domain": "site-13",
+      "cmp": "Sourcepoint-frame",
+      "cmpRuleVersion": "18.1.0",
+      "engine": "autoconsent",
+      "choices": {
+        "storage": "refuse",
+        "preferences": "refuse",
+        "analytics": "refuse",
+        "content": "refuse",
+        "advertising": "refuse",
+        "other": "refuse"
+      },
+      "setBy": {
+        "storage": "default",
+        "preferences": "default",
+        "analytics": "default",
+        "content": "default",
+        "advertising": "default",
+        "other": "default"
+      },
+      "status": "detected",
+      "paused": false,
+      "evidenceSummary": [],
+      "unfulfilled": [],
+      "mappingVersion": 2,
+      "schemaVersion": 1
+    }
+  ]
+}

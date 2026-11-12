@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en-GB">
+  <head>
+    <meta charset="utf-8" /><title>Fixture: Global Privacy Control probe</title>
+    <script>
+      // Read as early as a page can: an inline script in the head.
+      window.__gpcAtStart = navigator.globalPrivacyControl;
+    </script>
+  </head>
+  <body>
+    <h1>GPC probe</h1>
+    <script>
+      const q = new URLSearchParams(location.search);
+      window.__ready = Promise.all([
+        fetch('/echo.txt').then((r) => r.text()),
+        new Promise((resolve) => { const i = new Image(); i.onload = i.onerror = resolve; i.src = '/pixel.gif'; }),
+      ]);
+      if (q.get('frame')) {
+        const f = document.createElement('iframe');
+        f.src = q.get('frame');
+        document.body.appendChild(f);
+      }
+    </script>
+  </body>
+</html>
