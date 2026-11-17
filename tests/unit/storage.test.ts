@@ -111,17 +111,17 @@ describe('Repository', () => {
 
   it('persists across instances (restart)', async () => {
     const { repo, port } = await open();
-    await repo.setGlobalChoice('preferences', 'allow');
+    await repo.setGlobalChoice('preferences', 'refuse');
     await repo.updateSite('example.com', (r) => ({ ...(r ?? newSiteRecord('example.com', 1)), paused: true }));
     const again = new Repository(port, FIXED_NOW);
     await again.init();
-    expect((await again.getSettings()).globalChoices.preferences).toBe('allow');
+    expect((await again.getSettings()).globalSetBy.preferences).toBe('user');
     expect((await again.getSite('example.com'))?.paused).toBe(true);
   });
 
   it('builds resolver input from user set choices only, host override first', async () => {
     const { repo } = await open();
-    await repo.setGlobalChoice('analytics', 'allow');
+    await repo.setGlobalChoice('analytics', 'refuse');
     await repo.updateSite('example.com', () => {
       const r = newSiteRecord('example.com', 1);
       r.choices.advertising = 'allow'; // not user set: must be ignored
@@ -130,7 +130,7 @@ describe('Repository', () => {
       return r;
     });
     const keys = { host: 'shop.example.com', site: 'example.com' };
-    expect(await repo.resolverInput(keys)).toEqual({ paused: false, site: { content: 'allow' }, global: { analytics: 'allow' } });
+    expect(await repo.resolverInput(keys)).toEqual({ paused: false, site: { content: 'allow' }, global: { analytics: 'refuse' } });
     await repo.updateSite('shop.example.com', () => ({ ...newSiteRecord('shop.example.com', 1), paused: true }));
     expect((await repo.resolverInput(keys)).paused).toBe(true);
     await repo.setGlobalChoice('analytics', null);
@@ -158,9 +158,9 @@ describe('Repository', () => {
   it('surfaces a failed write (quota) instead of losing it silently, and keeps working afterwards', async () => {
     const { repo, port } = await open();
     port.failWrites = true;
-    await expect(repo.setGlobalChoice('other', 'allow')).rejects.toThrow(/quota/i);
+    await expect(repo.setGlobalChoice('other', 'refuse')).rejects.toThrow(/quota/i);
     port.failWrites = false;
-    await repo.setGlobalChoice('other', 'allow');
+    await repo.setGlobalChoice('other', 'refuse');
     expect((await repo.getSettings()).globalSetBy.other).toBe('user');
   });
 
@@ -180,7 +180,7 @@ describe('Repository', () => {
     port.data.set(KEY.meta, { schemaVersion: 99, createdAt: FIXED_NOW().toISOString() });
     const { repo } = await open(port);
     expect(repo.readOnly).toBe(true);
-    await expect(repo.setGlobalChoice('other', 'allow')).rejects.toBeInstanceOf(StoreReadOnlyError);
+    await expect(repo.setGlobalChoice('other', 'refuse')).rejects.toBeInstanceOf(StoreReadOnlyError);
   });
 
   it('lists and forgets sites', async () => {

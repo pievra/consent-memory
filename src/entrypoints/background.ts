@@ -490,6 +490,8 @@ export default defineBackground(() => {
         case 'ui:state':
           return { ok: true, state: await uiState(tabUrl) };
         case 'ui:setGlobalChoice':
+          // The request parser already rejects 'allow'; refused again here so no caller can store it.
+          if (request.choice === 'allow') return { ok: false, error: 'invalid_request' };
           await repository.setGlobalChoice(request.purpose, request.choice);
           break;
         case 'ui:setSiteChoice':

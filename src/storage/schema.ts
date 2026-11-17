@@ -62,8 +62,11 @@ export const siteRecordSchema = z
   });
 export type SiteRecord = z.infer<typeof siteRecordSchema>;
 
+/** A stored default is always a refusal. 'allow' exists only in site records. */
+const globalChoice = choice.refine((c): boolean => c === 'refuse', { message: "a default can only be 'refuse'" });
+
 export const settingsSchema = z.strictObject({
-  globalChoices: perPurpose(choice),
+  globalChoices: perPurpose(globalChoice),
   globalSetBy: perPurpose(setBy),
   gpcEnabled: z.boolean(),
   schemaVersion: z.literal(SCHEMA_VERSION),

@@ -90,8 +90,11 @@ export class Repository {
     return defaultSettings();
   }
 
-  /** Pass null to clear a global choice back to the built in refusal default. */
-  setGlobalChoice(purpose: Purpose, choice: Choice | null): Promise<Settings> {
+  /**
+   * Pass null to clear a global choice back to the built in refusal default.
+   * A default can never be 'allow': only a site's own rule can allow a purpose.
+   */
+  setGlobalChoice(purpose: Purpose, choice: 'refuse' | null): Promise<Settings> {
     return this.#serialise(async () => {
       this.#assertWritable();
       const settings = await this.getSettings();
@@ -350,7 +353,15 @@ export class Repository {
       }
       if (!dryRun) {
         if (fileSettings && policy === 'take_imported') {
-          items[KEY.settings] = settingsSchema.parse({ ...current, globalChoices: fileSettings.globalChoices, globalSetBy: fileSettings.globalSetBy });
+          // The settings can hold only refusals: a default the file allows is dropped, not stored.
+          const globalChoices = { ...current.globalChoices };
+          const globalSetBy = { ...current.globalSetBy };
+          for (const p of PURPOSES) {
+            const refused = fileSettings.globalChoices[p] === 'refuse';
+            globalChoices[p] = 'refuse';
+            globalSetBy[p] = refused ? fileSettings.globalSetBy[p] : 'default';
+          }
+          items[KEY.settings] = settingsSchema.parse({ ...current, globalChoices, globalSetBy });
         }
         for (const [key, value] of Object.entries(items)) {
           if (key.startsWith(KEY.sitePrefix)) siteRecordSchema.parse(value);
