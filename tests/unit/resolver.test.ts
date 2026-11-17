@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { planWholeBannerAction, TCF_PURPOSE_MAP } from '../../src/core/consent/mappings';
+import { planAction, planWholeBannerAction, TCF_PURPOSE_MAP } from '../../src/core/consent/mappings';
 import { PURPOSES, type Choice, type Purpose } from '../../src/core/consent/purposes';
 import { resolvePreferences } from '../../src/core/consent/resolver';
 
@@ -39,15 +39,14 @@ describe('resolvePreferences', () => {
     expect(resolvePreferences({ paused: true, site: all, global: all })).toEqual({ paused: true });
   });
 
-  it('follows site → global → refusal for every combination', () => {
+  it('follows site → global refusal → refusal for every combination, and allows only from the site', () => {
     let cases = 0;
     for (const input of grid()) {
       const r = resolvePreferences({ paused: false, ...input });
       if (r.paused) throw new Error('unexpected pause');
       for (const p of PURPOSES) {
-        const expected = input.site[p] ?? input.global[p] ?? 'refuse';
-        expect(r.choices[p]).toBe(expected);
-        expect(r.sources[p]).toBe(input.site[p] ? 'site' : input.global[p] ? 'global' : 'default');
+        expect(r.choices[p]).toBe(input.site[p] ?? 'refuse');
+        expect(r.sources[p]).toBe(input.site[p] ? 'site' : input.global[p] === 'refuse' ? 'global' : 'default');
       }
       cases++;
     }
@@ -76,7 +75,27 @@ describe('planWholeBannerAction', () => {
   it('opts in only when the user allowed all six purposes', () => {
     const all = Object.fromEntries(PURPOSES.map((p) => [p, 'allow'])) as Record<Purpose, Choice>;
     expect(resolve(all).action).toBe('optIn');
-    expect(resolve({}, all).action).toBe('optIn');
+  });
+
+  it('six global allows with no site rule refuse, with nothing unfulfilled', () => {
+    const all = Object.fromEntries(PURPOSES.map((p) => [p, 'allow'])) as Record<Purpose, Choice>;
+    expect(resolve({}, all)).toMatchObject({ action: 'optOut', unfulfilled: [] });
+  });
+
+  it('one global allow for analytics grants nothing on a Cookiebot site', () => {
+    const cookiebot = { offered: ['preferences', 'analytics', 'advertising'], implies: { preferences: ['storage'], analytics: ['storage'], advertising: ['storage'] } } as const;
+    const planFor = (site: Partial<Record<Purpose, Choice>>, global: Partial<Record<Purpose, Choice>>) => {
+      const r = resolvePreferences({ paused: false, site, global });
+      if (r.paused) throw new Error('unexpected pause');
+      return planAction(r.choices, r.sources, cookiebot);
+    };
+    for (const global of [{ analytics: 'allow' }, { analytics: 'allow', storage: 'allow' }] as Partial<Record<Purpose, Choice>>[]) {
+      const plan = planFor({}, global);
+      expect(plan).toMatchObject({ action: 'optOut', unfulfilled: [] });
+      expect(plan.grant).toBeUndefined();
+    }
+    // The same choice made for the site itself is what grants it.
+    expect(planFor({ analytics: 'allow', storage: 'allow' }, {})).toMatchObject({ action: 'purposes', grant: ['analytics'] });
   });
 
   it('opts out for all 62 mixed combinations and lists what it cannot grant', () => {

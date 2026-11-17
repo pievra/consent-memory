@@ -33,7 +33,8 @@ describe('site choices and pause', () => {
     await repo.setSiteChoice('example.com', 'preferences', null);
     r = resolvePreferences(await repo.resolverInput(keys('example.com')));
     if (r.paused) throw new Error('paused');
-    expect([r.choices.preferences, r.sources.preferences]).toEqual(['allow', 'global']);
+    // A default that allows is never honoured: only the site's own record can allow.
+    expect([r.choices.preferences, r.sources.preferences]).toEqual(['refuse', 'default']);
   });
   it('pausing keeps choices and results', async () => {
     const { repo } = await open();
