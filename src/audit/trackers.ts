@@ -25,8 +25,14 @@ const ANALYTICS = [
   'omtrdc.net', 'segment.io', 'cdn.segment.com', 'mixpanel.com', 'amplitude.com', 'fullstory.com', 'mouseflow.com', 'chartbeat.com',
   'chartbeat.net', 'xiti.com', 'mc.yandex.ru', 'nr-data.net', 'piano.io', 'matomo.cloud',
 ];
-/** Present only so that automated tests can exercise the audit. `.localhost` never leaves the machine. */
-const TEST_ONLY = ['fixture-tracker.localhost'];
+/** Set when the extension is built: true only for `pnpm build:test` and the unit test runner. */
+declare const __TEST_TRACKER__: boolean;
+/**
+ * Present only in test builds, so that automated tests can exercise the audit. The production
+ * build drops it: the condition is resolved when the extension is built, and `pnpm check:bundle`
+ * fails if the name appears in the package. `.localhost` never leaves the machine.
+ */
+const TEST_ONLY = __TEST_TRACKER__ ? ['fixture-tracker.localhost'] : [];
 
 export const TRACKERS: ReadonlyMap<string, TrackerCategory> = new Map<string, TrackerCategory>([
   ...ADVERTISING.map((d) => [d, 'advertising'] as const),

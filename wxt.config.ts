@@ -3,12 +3,17 @@ import { EXTENSION_NAME, STORE_NAME } from './src/config/brand';
 
 // Permissions are reviewed one by one in docs/store/permissions.md.
 // Any change here must update tests/unit/manifest.test.ts.
+// `pnpm build:test` makes the same production build with one difference: the tracker list also
+// holds the fixture tracker the audit tests need. It goes to its own folder and is never packaged.
+const TEST_BUILD = process.env.PIEVRA_TEST_BUILD === '1';
+
 export default defineConfig({
   srcDir: 'src',
+  ...(TEST_BUILD ? { outDirTemplate: '{{browser}}-mv{{manifestVersion}}-test' } : {}),
   manifestVersion: 3,
   imports: false,
   // Vite's module preload polyfill calls fetch(); extension pages must make no requests.
-  vite: () => ({ build: { modulePreload: { polyfill: false } } }),
+  vite: () => ({ build: { modulePreload: { polyfill: false } }, define: { __TEST_TRACKER__: JSON.stringify(TEST_BUILD) } }),
   manifest: {
     name: STORE_NAME,
     short_name: EXTENSION_NAME,

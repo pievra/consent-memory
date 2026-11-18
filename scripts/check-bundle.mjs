@@ -34,6 +34,8 @@ const banned = [
   ['Function constructor', /(?<![\w.$])Function\s*\(/g],
   ['string timer', /set(?:Timeout|Interval)\s*\(\s*["'`]/g],
   ['storage.sync', /storage\.sync/g],
+  // The tracker used by the automated tests belongs to test builds only.
+  ['test-only tracker', /fixture-tracker/g],
 ];
 const walk = (dir) => readdirSync(dir).flatMap((f) => (statSync(join(dir, f)).isDirectory() ? walk(join(dir, f)) : [join(dir, f)]));
 let total = 0;
