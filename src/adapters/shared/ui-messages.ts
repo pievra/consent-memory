@@ -7,11 +7,13 @@ import type { UiRequest } from './ui-protocol';
 
 const purpose = z.enum(PURPOSES);
 const choice = z.enum(CHOICES).nullable();
+/** A default can be set to refuse or reset, never to allow: only a site's own rule can allow. */
+const globalChoice = z.literal('refuse').nullable();
 const domain = z.string().max(253).refine(isValidSiteKey);
 
 const uiRequest = z.union([
   z.strictObject({ type: z.literal('ui:state'), tabUrl: z.string().max(4096).optional() }),
-  z.strictObject({ type: z.literal('ui:setGlobalChoice'), purpose, choice }),
+  z.strictObject({ type: z.literal('ui:setGlobalChoice'), purpose, choice: globalChoice }),
   z.strictObject({ type: z.literal('ui:setSiteChoice'), domain, purpose, choice }),
   z.strictObject({ type: z.literal('ui:setPaused'), domain, paused: z.boolean() }),
   z.strictObject({ type: z.literal('ui:setGpc'), enabled: z.boolean() }),

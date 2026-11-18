@@ -1,5 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import type { ReportRequest } from '../../src/adapters/shared/protocol';
+import { planWholeBannerAction } from '../../src/core/consent/mappings';
+import { PURPOSES } from '../../src/core/consent/purposes';
+import { resolvePreferences } from '../../src/core/consent/resolver';
 import { isValidSiteKey, siteKeysForUrl } from '../../src/core/domains/site-key';
 import { applyReport, applyTopFrameEvidence, applyWall, resumableCmp, topFrameSnapshotFor } from '../../src/storage/apply-report';
 import { openStore } from '../../src/storage/migrations';
@@ -61,7 +64,7 @@ describe('openStore', () => {
   it('creates meta on an empty store', async () => {
     const port = new MemoryStorage();
     expect((await openStore(port, FIXED_NOW)).mode).toBe('read_write');
-    expect(port.data.get(KEY.meta)).toMatchObject({ schemaVersion: 1 });
+    expect(port.data.get(KEY.meta)).toMatchObject({ schemaVersion: 2 });
   });
   it('opens a newer store read only and writes nothing', async () => {
     const port = new MemoryStorage();
@@ -84,6 +87,41 @@ describe('openStore', () => {
     expect(result.mode).toBe('read_write');
     expect(port.data.get('site:a.example')).toEqual({ v: 2 });
     expect([...port.data.keys()].some((k) => k.startsWith(KEY.backupPrefix))).toBe(false);
+  });
+  it('version 1 → 2 turns every default into a refusal nobody chose, keeps the other settings and leaves site records untouched', async () => {
+    const port = new MemoryStorage();
+    const all = (value: string) => Object.fromEntries(PURPOSES.map((p) => [p, value]));
+    const meta = { schemaVersion: 1, createdAt: '2026-11-12T08:00:00.000Z' };
+    const sixAllows = { domain: 'allowed.example', choices: all('allow'), setBy: all('user'), status: 'not_detected', paused: false, mappingVersion: 2, schemaVersion: 1 };
+    const refused = { domain: 'refused.example', choices: { ...all('refuse'), content: 'allow' }, setBy: { ...all('default'), content: 'user' }, status: 'not_detected', paused: true, mappingVersion: 2, schemaVersion: 1 };
+    port.data.set(KEY.meta, meta);
+    port.data.set(KEY.settings, { globalChoices: all('allow'), globalSetBy: all('user'), gpcEnabled: false, schemaVersion: 1 });
+    port.data.set('site:allowed.example', structuredClone(sixAllows));
+    port.data.set('site:refused.example', structuredClone(refused));
+
+    const repo = new Repository(port, FIXED_NOW);
+    expect((await repo.init()).mode).toBe('read_write');
+    expect(port.data.get(KEY.meta)).toEqual({ ...meta, schemaVersion: 2, lastMigrationAt: FIXED_NOW().toISOString() });
+    expect(port.data.get(KEY.settings)).toEqual({ globalChoices: all('refuse'), globalSetBy: all('default'), gpcEnabled: false, schemaVersion: 2 });
+    expect(port.data.get('site:allowed.example')).toEqual(sixAllows);
+    expect(port.data.get('site:refused.example')).toEqual(refused);
+    expect([...port.data.keys()].some((k) => k.startsWith(KEY.backupPrefix) || k.startsWith(KEY.quarantinePrefix))).toBe(false);
+
+    // The site with six site allows still leads to acceptance; any other site is refused.
+    const plan = async (site: string) => {
+      const r = resolvePreferences(await repo.resolverInput({ host: site, site }));
+      if (r.paused) throw new Error('paused');
+      return planWholeBannerAction(r.choices, r.sources);
+    };
+    expect(await plan('allowed.example')).toMatchObject({ action: 'optIn', unfulfilled: [] });
+    expect(await plan('elsewhere.example')).toMatchObject({ action: 'optOut', unfulfilled: [] });
+  });
+  it('version 1 → 2 on a store without settings only raises the version', async () => {
+    const port = new MemoryStorage();
+    port.data.set(KEY.meta, { schemaVersion: 1, createdAt: FIXED_NOW().toISOString() });
+    expect((await new Repository(port, FIXED_NOW).init()).mode).toBe('read_write');
+    expect(port.data.has(KEY.settings)).toBe(false);
+    expect(port.data.get(KEY.meta)).toMatchObject({ schemaVersion: 2 });
   });
   it.each([
     ['a throwing migration', { 1: () => { throw new Error('boom'); } }, undefined],
@@ -111,17 +149,17 @@ describe('Repository', () => {
 
   it('persists across instances (restart)', async () => {
     const { repo, port } = await open();
-    await repo.setGlobalChoice('preferences', 'allow');
+    await repo.setGlobalChoice('preferences', 'refuse');
     await repo.updateSite('example.com', (r) => ({ ...(r ?? newSiteRecord('example.com', 1)), paused: true }));
     const again = new Repository(port, FIXED_NOW);
     await again.init();
-    expect((await again.getSettings()).globalChoices.preferences).toBe('allow');
+    expect((await again.getSettings()).globalSetBy.preferences).toBe('user');
     expect((await again.getSite('example.com'))?.paused).toBe(true);
   });
 
   it('builds resolver input from user set choices only, host override first', async () => {
     const { repo } = await open();
-    await repo.setGlobalChoice('analytics', 'allow');
+    await repo.setGlobalChoice('analytics', 'refuse');
     await repo.updateSite('example.com', () => {
       const r = newSiteRecord('example.com', 1);
       r.choices.advertising = 'allow'; // not user set: must be ignored
@@ -130,7 +168,7 @@ describe('Repository', () => {
       return r;
     });
     const keys = { host: 'shop.example.com', site: 'example.com' };
-    expect(await repo.resolverInput(keys)).toEqual({ paused: false, site: { content: 'allow' }, global: { analytics: 'allow' } });
+    expect(await repo.resolverInput(keys)).toEqual({ paused: false, site: { content: 'allow' }, global: { analytics: 'refuse' } });
     await repo.updateSite('shop.example.com', () => ({ ...newSiteRecord('shop.example.com', 1), paused: true }));
     expect((await repo.resolverInput(keys)).paused).toBe(true);
     await repo.setGlobalChoice('analytics', null);
@@ -158,9 +196,9 @@ describe('Repository', () => {
   it('surfaces a failed write (quota) instead of losing it silently, and keeps working afterwards', async () => {
     const { repo, port } = await open();
     port.failWrites = true;
-    await expect(repo.setGlobalChoice('other', 'allow')).rejects.toThrow(/quota/i);
+    await expect(repo.setGlobalChoice('other', 'refuse')).rejects.toThrow(/quota/i);
     port.failWrites = false;
-    await repo.setGlobalChoice('other', 'allow');
+    await repo.setGlobalChoice('other', 'refuse');
     expect((await repo.getSettings()).globalSetBy.other).toBe('user');
   });
 
@@ -180,7 +218,7 @@ describe('Repository', () => {
     port.data.set(KEY.meta, { schemaVersion: 99, createdAt: FIXED_NOW().toISOString() });
     const { repo } = await open(port);
     expect(repo.readOnly).toBe(true);
-    await expect(repo.setGlobalChoice('other', 'allow')).rejects.toBeInstanceOf(StoreReadOnlyError);
+    await expect(repo.setGlobalChoice('other', 'refuse')).rejects.toBeInstanceOf(StoreReadOnlyError);
   });
 
   it('lists and forgets sites', async () => {

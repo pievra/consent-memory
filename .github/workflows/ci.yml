@@ -15,7 +15,7 @@ concurrency:
 jobs:
   checks:
     runs-on: ubuntu-24.04
-    timeout-minutes: 20
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -62,8 +62,12 @@ jobs:
         # (it failed once and hung once on 2026-11-11).
         timeout-minutes: 5
         run: pnpm exec playwright install chromium
-      - name: Browser tests
+      - name: Test build (the production build plus the fixture tracker used by the audit tests)
+        run: pnpm build:test
+      - name: Browser tests on the test build
         run: pnpm test:e2e
+      - name: Browser tests on the production build (the three tests that need the fixture tracker are skipped)
+        run: pnpm test:e2e:production
       - name: Keep failure traces
         if: failure()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
@@ -86,7 +90,7 @@ jobs:
           node-version: 22
       - run: corepack enable
       - run: pnpm install --frozen-lockfile
-      - run: pnpm build
+      - run: pnpm build:test
       - name: Edge version
         run: microsoft-edge --version
       - name: Browser tests in Microsoft Edge

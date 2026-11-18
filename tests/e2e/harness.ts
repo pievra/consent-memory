@@ -6,7 +6,11 @@ import type { AddressInfo } from 'node:net';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 
-const EXTENSION = resolve('.output/chrome-mv3');
+// The test build (`pnpm build:test`) by default. It differs from the production build in one entry:
+// the tracker list also holds `fixture-tracker.localhost`. Set EXTENSION_DIR to test another build.
+const EXTENSION = resolve(process.env.EXTENSION_DIR ?? '.output/chrome-mv3-test');
+/** False for the production build, where the tests that need the fixture tracker are skipped. */
+export const HAS_TEST_TRACKER = readFileSync(join(EXTENSION, 'background.js'), 'utf8').includes('fixture-tracker.localhost');
 const PAGES = resolve('tests/fixtures/pages');
 // Set CHROMIUM_PATH to a Chrome for Testing or Chromium binary; branded Chrome no longer loads unpacked extensions from flags.
 const EXECUTABLE = process.env.CHROMIUM_PATH;

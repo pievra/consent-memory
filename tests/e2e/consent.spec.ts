@@ -342,3 +342,44 @@ test('no objection is made when the user allowed everything', async () => {
   await expect(popup.locator('.result')).not.toContainText('Applied');
   await expect(popup.locator('.next')).toContainText('Answer the banner yourself');
 });
+
+test('a version 1 store with six defaults set to allow is migrated at start: defaults refused, site records untouched, and only the site with its own six allows is accepted', async () => {
+  const all = (value: string) => Object.fromEntries(ALL.map((p) => [p, value]));
+  await waitForFirstStart(session);
+  const createdAt = ((await readStore(session)).meta as { createdAt: string }).createdAt;
+  const sixAllows = siteRecord('optin.localhost', ALL);
+  const oneAllow = { ...siteRecord('other.localhost', ['content']), paused: true };
+  await seed(session, {
+    meta: { schemaVersion: 1, createdAt },
+    settings: { globalChoices: all('allow'), globalSetBy: all('user'), gpcEnabled: false, schemaVersion: 1 },
+    'site:optin.localhost': sixAllows,
+    'site:other.localhost': oneAllow,
+  });
+  const profile = session.profile;
+  await session.context.close();
+  session = await launch(profile);
+
+  await expect.poll(async () => ((await readStore(session)).meta as { schemaVersion: number }).schemaVersion).toBe(2);
+  const store = await readStore(session);
+  console.log('after start, meta →', JSON.stringify(store.meta));
+  console.log('after start, settings →', JSON.stringify(store.settings));
+  console.log('after start, site:optin.localhost →', JSON.stringify(store['site:optin.localhost']));
+  console.log('after start, site:other.localhost →', JSON.stringify(store['site:other.localhost']));
+  expect(store.meta).toMatchObject({ schemaVersion: 2, createdAt });
+  expect((store.meta as { lastMigrationAt?: string }).lastMigrationAt).toBeDefined();
+  expect(store.settings).toEqual({ globalChoices: all('refuse'), globalSetBy: all('default'), gpcEnabled: false, schemaVersion: 2 });
+  expect(store['site:optin.localhost']).toEqual(sixAllows);
+  expect(store['site:other.localhost']).toEqual(oneAllow);
+  expect(Object.keys(store).some((k) => k.startsWith('backup:') || k.startsWith('quarantine:'))).toBe(false);
+
+  // The site with six site allows still resolves to acceptance.
+  const allowed = await session.context.newPage();
+  await allowed.goto(url('optin', 'onetrust.html'));
+  await waitForOutcome(session, 'optin.localhost');
+  expect(await clicks(allowed)).toEqual({ accept: 1, reject: 0 });
+  // A site with no rule of its own is refused, although all six defaults used to allow.
+  const plain = await session.context.newPage();
+  await plain.goto(url('norule', 'onetrust.html'));
+  await waitForOutcome(session, 'norule.localhost');
+  expect(await clicks(plain)).toEqual({ accept: 0, reject: 1 });
+});

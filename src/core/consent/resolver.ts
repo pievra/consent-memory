@@ -18,7 +18,10 @@ export type Resolution =
 
 /**
  * Resolution order (specification section 7):
- * 1. site paused, 2. explicit site choice, 3. global user choice, 4. refusal.
+ * 1. site paused, 2. explicit site choice, 3. global refusal, 4. refusal.
+ * A purpose resolves to 'allow' only when the record of that site says so. A global
+ * 'allow' is never honoured: it resolves to refusal with source 'default', so no setting
+ * can make the extension accept on sites the user did not choose one by one.
  * Anything that is not exactly 'allow' or 'refuse' is ignored, so a missing or
  * malformed value can never resolve to acceptance.
  */
@@ -32,8 +35,8 @@ export function resolvePreferences(input: ResolverInput): Resolution {
     if (site === 'allow' || site === 'refuse') {
       choices[purpose] = site;
       sources[purpose] = 'site';
-    } else if (global === 'allow' || global === 'refuse') {
-      choices[purpose] = global;
+    } else if (global === 'refuse') {
+      choices[purpose] = 'refuse';
       sources[purpose] = 'global';
     } else {
       choices[purpose] = 'refuse';

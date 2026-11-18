@@ -103,9 +103,15 @@ test('settings: defaults, search, filter, forget with undo, and bulk refusal wit
   await expect(page.locator('tbody tr')).toHaveCount(3);
   await expectAccessible(page);
 
-  // defaults
-  await purpose(page, 'Analytics').getByLabel('Allow', { exact: true }).check();
-  await expect.poll(async () => ((await readStore(session)).settings as { globalChoices: Record<string, string> } | undefined)?.globalChoices.analytics).toBe('allow');
+  // defaults: the store refuses a default set to allow, from the settings page itself, and writes nothing
+  const settingsBefore = (await readStore(session)).settings;
+  const refusal = await page.evaluate(() => chrome.runtime.sendMessage({ type: 'ui:setGlobalChoice', purpose: 'analytics', choice: 'allow' }));
+  expect(refusal).toEqual({ ok: false, error: 'invalid_request' });
+  expect((await readStore(session)).settings).toEqual(settingsBefore);
+  console.log('ui:setGlobalChoice allow →', JSON.stringify(refusal), '| stored settings →', JSON.stringify((await readStore(session)).settings ?? 'none (built-in refusal defaults)'));
+  const accepted = await page.evaluate(() => chrome.runtime.sendMessage({ type: 'ui:setGlobalChoice', purpose: 'analytics', choice: 'refuse' }));
+  expect(accepted.ok).toBe(true);
+  expect(((await readStore(session)).settings as { globalChoices: Record<string, string>; globalSetBy: Record<string, string> }).globalChoices.analytics).toBe('refuse');
 
   // search and filter
   await page.getByPlaceholder('Search sites').fill('alph');
@@ -130,7 +136,7 @@ test('settings: defaults, search, filter, forget with undo, and bulk refusal wit
 
   // bulk: preview first, nothing written until confirmed
   await page.getByRole('button', { name: 'Refuse everything on all sites' }).click();
-  await expect(page.locator('#bulk-text')).toHaveText('This will change your defaults for 1 purposes and your choices on 1 sites.');
+  await expect(page.locator('#bulk-text')).toHaveText('This will change your choices on 1 sites.');
   expect((await site('gamma.localhost')).choices.content).toBe('allow');
   await page.getByRole('button', { name: 'Confirm' }).click();
   await expect.poll(async () => (await site('gamma.localhost')).choices.content).toBe('refuse');
@@ -239,22 +245,34 @@ test('the welcome page is available in French at phone width without overflow', 
   expect(await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth)).toBeLessThanOrEqual(0);
 });
 
-test('an import that would allow everything by default says so and cannot be applied without an explicit tick', async () => {
+test('an import whose defaults allow says they are ignored, under either policy, and keeps the file’s site rules', async () => {
   const purposes = ['storage', 'preferences', 'analytics', 'content', 'advertising', 'other'];
   const all = (value: string) => Object.fromEntries(purposes.map((p) => [p, value]));
-  const preset = { format: 'consent-memory-export', formatVersion: 1, sites: [], settings: { globalChoices: all('allow'), globalSetBy: all('user') } };
+  const rule = { domain: 'imported.example', choices: { ...all('refuse'), content: 'allow' }, setBy: { ...all('default'), content: 'user' }, paused: false };
+  const withRule = { format: 'consent-memory-export', formatVersion: 1, sites: [rule], settings: { globalChoices: all('allow'), globalSetBy: all('user') } };
+  const preset = { ...withRule, sites: [] };
   const page = await session.context.newPage();
   await page.goto(ext('options.html'));
   await page.locator('#import-file').setInputFiles({ name: 'preset.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(preset)) });
   await expect(page.locator('#import-text')).toHaveText('0 new sites, 0 with different choices, 0 identical.');
-  await expect(page.locator('.import-allows')).toContainText('On every site, by default: Storage and access, Preferences, Analytics, Content, Advertising and Other purposes');
-  const take = page.getByRole('button', { name: 'Use the file’s choices where they differ' });
-  await expect(take).toBeDisabled();
+  await expect(page.locator('#import-defaults-ignored')).toHaveText('Defaults that allow are never imported: the 6 in this file are ignored.');
+  // Nothing in this file allows anything, so no tick is asked for.
+  await expect(page.locator('.import-allows')).toHaveCount(0);
+  await expect(page.getByRole('button', { name: 'Use the file’s choices where they differ' })).toBeEnabled();
   await expectAccessible(page);
-  // Cancelling leaves every default at refuse.
   await page.locator('.confirm').getByRole('button', { name: 'Cancel' }).click();
-  const stored = (await readStore(session)).settings as { globalChoices: Record<string, string> } | undefined;
-  expect(Object.values(stored?.globalChoices ?? all('refuse'))).toEqual(purposes.map(() => 'refuse'));
+
+  // The same file, with one site rule, under both policies.
+  const settingsOf = async () => (await readStore(session)).settings as { globalChoices: Record<string, string>; globalSetBy: Record<string, string> } | undefined;
+  for (const policy of ['keep_mine', 'take_imported'] as const) {
+    const reply = await page.evaluate(({ file, policy }) => chrome.runtime.sendMessage({ type: 'ui:import', file, policy, dryRun: false }), { file: withRule, policy });
+    const stored = await settingsOf();
+    console.log(`import ${policy}: summary →`, JSON.stringify(reply.summary), '| stored settings →', JSON.stringify(stored ?? 'none (built-in refusal defaults)'));
+    expect(reply.summary).toMatchObject({ valid: true, defaultsIgnored: 6 });
+    expect(Object.values(stored?.globalChoices ?? all('refuse'))).toEqual(purposes.map(() => 'refuse'));
+    expect(Object.values(stored?.globalSetBy ?? all('default'))).toEqual(purposes.map(() => 'default'));
+    expect(((await readStore(session))['site:imported.example'] as { choices: Record<string, string> }).choices).toEqual(rule.choices);
+  }
 });
 
 test('the toolbar button carries a mark for the result, and the popup says why a result is partial and what to do', async () => {
@@ -300,18 +318,21 @@ test('the toolbar button carries a mark for the result, and the popup says why a
   expect(await badge(plain)).toBe('');
 });
 
-test('settings warn that allowing some purposes by default will read as "partly done" on most sites', async () => {
+test('settings offer no way to allow by default, in English and French, and the settings and welcome pages carry the brand header', async () => {
   const page = await session.context.newPage();
+  await page.setViewportSize({ width: 1280, height: 900 });
+  for (const [lang, statement] of [
+    ['en', 'Every purpose is refused on every site unless you allow it for that site.'],
+    ['fr', 'Toutes les finalités sont refusées sur tous les sites, sauf celles que vous autorisez pour un site donné.'],
+  ] as const) {
+    await page.goto(ext(`options.html?lang=${lang}`));
+    const defaults = page.locator('section[aria-labelledby="defaults"]');
+    await expect(defaults.locator('#defaults-statement')).toHaveText(statement);
+    await expect(defaults.locator('input, button, select')).toHaveCount(0);
+    await expectAccessible(page);
+    await page.screenshot({ path: `test-results/settings-${lang}.png`, fullPage: true });
+  }
   await page.goto(ext('options.html'));
-  await expect(page.locator('#defaults-mixed')).toHaveCount(0);
-  await purpose(page, 'Preferences').getByLabel('Allow', { exact: true }).check();
-  await expect(page.locator('#defaults-mixed')).toContainText('You allow Preferences by default');
-  await expect(page.locator('#defaults-mixed')).toContainText('Partly done');
-  await purpose(page, 'Preferences').getByLabel('Refuse', { exact: true }).check();
-  await expect(page.locator('#defaults-mixed')).toHaveCount(0);
-  // Allowing everything gets its own warning: accept can only be pressed on a few consent tools.
-  for (const name of ['Storage and access', 'Preferences', 'Analytics', 'Content', 'Advertising', 'Other purposes']) await purpose(page, name).getByLabel('Allow', { exact: true }).check();
-  await expect(page.locator('#defaults-all')).toContainText('On most sites it will click nothing');
   // The settings and the welcome page carry the brand header.
   await expect(page.getByRole('img', { name: 'Pievra' })).toBeVisible();
   await page.goto(ext('onboarding.html'));

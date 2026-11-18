@@ -7,7 +7,7 @@ import { en } from '../../src/locales/en';
 import { fr } from '../../src/locales/fr';
 import { applyReport } from '../../src/storage/apply-report';
 import { Repository } from '../../src/storage/repository';
-import { EXPORT_FORMAT, KEY, siteRecordSchema } from '../../src/storage/schema';
+import { EXPORT_FORMAT, KEY, settingsSchema, siteRecordSchema } from '../../src/storage/schema';
 import { FIXED_NOW, MemoryStorage } from './helpers';
 
 const open = async () => {
@@ -23,7 +23,6 @@ const verifiedRecord = (domain: string) =>
 describe('site choices and pause', () => {
   it('a site choice overrides the default, and clearing it returns to the default', async () => {
     const { repo } = await open();
-    await repo.setGlobalChoice('preferences', 'allow');
     await repo.setSiteChoice('example.com', 'preferences', 'refuse');
     await repo.setSiteChoice('example.com', 'content', 'allow');
     let r = resolvePreferences(await repo.resolverInput(keys('example.com')));
@@ -33,7 +32,24 @@ describe('site choices and pause', () => {
     await repo.setSiteChoice('example.com', 'preferences', null);
     r = resolvePreferences(await repo.resolverInput(keys('example.com')));
     if (r.paused) throw new Error('paused');
-    expect([r.choices.preferences, r.sources.preferences]).toEqual(['allow', 'global']);
+    expect([r.choices.preferences, r.sources.preferences]).toEqual(['refuse', 'default']);
+  });
+  it('a default can be set to refuse or reset, and never to allow', async () => {
+    const { repo, port } = await open();
+    expect(parseUiRequest({ type: 'ui:setGlobalChoice', purpose: 'analytics', choice: 'allow' })).toBeNull();
+    expect(parseUiRequest({ type: 'ui:setGlobalChoice', purpose: 'analytics', choice: 'refuse' })).not.toBeNull();
+    expect(parseUiRequest({ type: 'ui:setGlobalChoice', purpose: 'analytics', choice: null })).not.toBeNull();
+    const writes = port.writes;
+    await expect(repo.setGlobalChoice('analytics', 'allow' as never)).rejects.toThrow();
+    expect(port.writes).toBe(writes);
+    expect((await repo.getSettings()).globalChoices.analytics).toBe('refuse');
+    await repo.setGlobalChoice('analytics', 'refuse');
+    expect((await repo.getSettings()).globalSetBy.analytics).toBe('user');
+    await repo.setGlobalChoice('analytics', null);
+    expect((await repo.getSettings()).globalSetBy.analytics).toBe('default');
+    // Stored settings that carry an allow do not validate.
+    const settings = await repo.getSettings();
+    expect(settingsSchema.safeParse({ ...settings, globalChoices: { ...settings.globalChoices, analytics: 'allow' } }).success).toBe(false);
   });
   it('pausing keeps choices and results', async () => {
     const { repo } = await open();
@@ -60,14 +76,13 @@ describe('bulk operations', () => {
   });
   it('refuse everywhere previews without writing, then changes defaults and site choices only where something was allowed', async () => {
     const { repo, port } = await open();
-    await repo.setGlobalChoice('analytics', 'allow');
     await repo.setSiteChoice('a.example', 'analytics', 'allow');
     await repo.setSiteChoice('a.example', 'content', 'allow');
     await repo.setSiteChoice('b.example', 'advertising', 'refuse');
     const writes = port.writes;
-    expect(await repo.refuseEverywhere(['analytics'], true)).toEqual({ sites: 1, defaults: 1 });
+    expect(await repo.refuseEverywhere(['analytics'], true)).toEqual({ sites: 1, defaults: 0 });
     expect(port.writes).toBe(writes);
-    expect(await repo.refuseEverywhere(['analytics'], false)).toEqual({ sites: 1, defaults: 1 });
+    expect(await repo.refuseEverywhere(['analytics'], false)).toEqual({ sites: 1, defaults: 0 });
     expect((await repo.getSettings()).globalChoices.analytics).toBe('refuse');
     const a = (await repo.getSite('a.example'))!;
     expect([a.choices.analytics, a.setBy.analytics, a.choices.content]).toEqual(['refuse', 'default', 'allow']);
@@ -76,7 +91,7 @@ describe('bulk operations', () => {
   });
   it('delete all removes choices and results and keeps the store usable', async () => {
     const { repo, port } = await open();
-    await repo.setGlobalChoice('other', 'allow');
+    await repo.setGlobalChoice('other', 'refuse');
     await repo.updateSite('a.example', () => verifiedRecord('a.example'));
     expect(await repo.deleteAll()).toBe(1);
     expect([...port.data.keys()]).toEqual([KEY.meta]);
@@ -116,18 +131,19 @@ describe('import', () => {
     await repo.updateSite('differs.example', () => verifiedRecord('differs.example'));
     const incoming = file([entry('same.example'), entry('differs.example', { paused: true, choices: { ...allRefuse, content: 'allow' }, setBy: { ...allDefault, content: 'user' } }), entry('new.example')], { settings: { globalChoices: { ...allRefuse, other: 'allow' }, globalSetBy: { ...allDefault, other: 'user' } } });
     const writes = port.writes;
-    expect(await repo.importData(incoming, 'take_imported', true)).toEqual({ valid: true, added: 1, changed: 1, unchanged: 1, skipped: 0, addedAllowing: 0, changedAllowing: 1, defaultsAllowing: ['other'] });
+    expect(await repo.importData(incoming, 'take_imported', true)).toEqual({ valid: true, added: 1, changed: 1, unchanged: 1, skipped: 0, addedAllowing: 0, changedAllowing: 1, defaultsIgnored: 1 });
     expect(port.writes).toBe(writes);
 
-    expect(await repo.importData(incoming, 'keep_mine', false)).toMatchObject({ valid: true, added: 1, changed: 0, unchanged: 1, skipped: 1, changedAllowing: 0 });
+    expect(await repo.importData(incoming, 'keep_mine', false)).toMatchObject({ valid: true, added: 1, changed: 0, unchanged: 1, skipped: 1, changedAllowing: 0, defaultsIgnored: 1 });
     expect((await repo.getSite('differs.example'))!.paused).toBe(false);
     expect((await repo.getSettings()).globalChoices.other).toBe('refuse');
 
-    expect(await repo.importData(incoming, 'take_imported', false)).toMatchObject({ changed: 1, added: 0 });
+    expect(await repo.importData(incoming, 'take_imported', false)).toMatchObject({ changed: 1, added: 0, defaultsIgnored: 1 });
     const differs = (await repo.getSite('differs.example'))!;
     expect(differs).toMatchObject({ paused: true, status: 'verified', cmp: 'Onetrust' });
     expect(differs.choices.content).toBe('allow');
-    expect((await repo.getSettings()).globalChoices.other).toBe('allow');
+    // The file's site rule is taken; its default that allows is never stored.
+    expect((await repo.getSettings()).globalChoices.other).toBe('refuse');
   });
   it('a file with no sites that switches every default to allow is reported, never silent', async () => {
     const { repo } = await open();
@@ -135,14 +151,15 @@ describe('import', () => {
     const allUser = Object.fromEntries(PURPOSES.map((p) => [p, 'user']));
     const preset = file([entry('new.example', { choices: allAllow, setBy: allUser })], { settings: { globalChoices: allAllow, globalSetBy: allUser } });
     const preview = await repo.importData(preset, 'take_imported', true);
-    expect(preview.defaultsAllowing).toEqual([...PURPOSES]);
+    expect(preview.defaultsIgnored).toBe(PURPOSES.length);
     expect(preview.addedAllowing).toBe(1);
     // Nothing was written by the preview, and "keep mine" never changes the defaults.
     await repo.importData(preset, 'keep_mine', false);
     expect(Object.values((await repo.getSettings()).globalChoices)).toEqual(PURPOSES.map(() => 'refuse'));
-    // Once applied, the same file reports nothing new to allow by default.
+    // Taking the file's choices never stores a default that allows either.
     await repo.importData(preset, 'take_imported', false);
-    expect((await repo.importData(preset, 'take_imported', true)).defaultsAllowing).toEqual([]);
+    expect(Object.values((await repo.getSettings()).globalChoices)).toEqual(PURPOSES.map(() => 'refuse'));
+    expect(Object.values((await repo.getSite('new.example'))!.choices)).toEqual(PURPOSES.map(() => 'allow'));
   });
 });
 

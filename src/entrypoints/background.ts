@@ -490,6 +490,7 @@ export default defineBackground(() => {
         case 'ui:state':
           return { ok: true, state: await uiState(tabUrl) };
         case 'ui:setGlobalChoice':
+          // 'allow' cannot reach this point: the request parser rejects it and the type excludes it.
           await repository.setGlobalChoice(request.purpose, request.choice);
           break;
         case 'ui:setSiteChoice':

@@ -1,12 +1,41 @@
 import type { StoragePort } from '../adapters/shared/ports';
 import { SCHEMA_VERSION } from '../config/constants';
-import { KEY, metaSchema, type Meta } from './schema';
+import { PURPOSES } from '../core/consent/purposes';
+import { KEY, metaSchema, settingsSchema, type Meta } from './schema';
 
 /** Transforms the whole store from version N to N+1. Must be pure. */
 export type Migration = (store: Record<string, unknown>) => Record<string, unknown>;
 
-/** MIGRATIONS[n] upgrades version n to n+1. Empty while the store is at version 1. */
-export const MIGRATIONS: Readonly<Record<number, Migration>> = Object.freeze({});
+const isPlainObject = (value: unknown): value is Record<string, unknown> => typeof value === 'object' && value !== null && !Array.isArray(value);
+
+/**
+ * Version 1 → 2. A default could be set to 'allow' in version 1; from version 2 only a
+ * site's own rule can allow. Every default becomes a refusal that nobody chose
+ * ('default'), and the other settings are kept. Site records are not touched.
+ */
+function settingsRefuseOnly(store: Record<string, unknown>): Record<string, unknown> {
+  const settings = store[KEY.settings];
+  // Absent settings need nothing. Settings that are not an object are left for the repository to quarantine.
+  if (!isPlainObject(settings)) return store;
+  return {
+    ...store,
+    [KEY.settings]: {
+      globalChoices: Object.fromEntries(PURPOSES.map((p) => [p, 'refuse'])),
+      globalSetBy: Object.fromEntries(PURPOSES.map((p) => [p, 'default'])),
+      gpcEnabled: typeof settings.gpcEnabled === 'boolean' ? settings.gpcEnabled : true,
+      schemaVersion: 2,
+    },
+  };
+}
+
+/** MIGRATIONS[n] upgrades version n to n+1. */
+export const MIGRATIONS: Readonly<Record<number, Migration>> = Object.freeze({ 1: settingsRefuseOnly });
+
+/** A migrated store is accepted only if its settings, when present as an object, are valid. */
+export function validateMigratedStore(store: Record<string, unknown>): boolean {
+  const settings = store[KEY.settings];
+  return !isPlainObject(settings) || settingsSchema.safeParse(settings).success;
+}
 
 export type OpenResult =
   | { mode: 'read_write'; meta: Meta }
@@ -27,7 +56,7 @@ export async function openStore(
   now: () => Date,
   target: number = SCHEMA_VERSION,
   migrations: Readonly<Record<number, Migration>> = MIGRATIONS,
-  validate: (store: Record<string, unknown>) => boolean = () => true,
+  validate: (store: Record<string, unknown>) => boolean = validateMigratedStore,
 ): Promise<OpenResult> {
   const all = await port.get(null);
   const rawMeta = all[KEY.meta];

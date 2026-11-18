@@ -1,6 +1,6 @@
 {
   "name": "consent-memory",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "description": "Browser extension that applies, remembers and verifies website privacy preferences.",
   "license": "MPL-2.0",
@@ -12,11 +12,13 @@
   "scripts": {
     "dev": "wxt",
     "build": "wxt build",
+    "build:test": "PIEVRA_TEST_BUILD=1 wxt build",
     "zip": "wxt zip",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "test": "vitest run",
     "test:e2e": "playwright test",
+    "test:e2e:production": "EXTENSION_DIR=.output/chrome-mv3 playwright test",
     "check:bundle": "node scripts/check-bundle.mjs",
     "check:secrets": "node scripts/check-secrets.mjs",
     "sbom": "pnpm sbom --sbom-format cyclonedx --sbom-type application --prod --lockfile-only --out sbom.cdx.json",

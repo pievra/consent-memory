@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { MAX_EVIDENCE_LINE_LENGTH, MAX_EVIDENCE_LINES, SCHEMA_VERSION } from '../config/constants';
+import { MAX_EVIDENCE_LINE_LENGTH, MAX_EVIDENCE_LINES, SCHEMA_VERSION, SITE_RECORD_VERSION } from '../config/constants';
 import { CHOICES, PURPOSES, REFUSE_ALL, type Purpose } from '../core/consent/purposes';
 import { CONSENT_STATUSES } from '../core/consent/states';
 import { AUDIT_CHECKS, AUDIT_OUTCOMES } from '../audit/checks';
@@ -52,7 +52,7 @@ export const siteRecordSchema = z
     /** Technical observations from the last audited visit. Observations, not legal findings. */
     audit: auditResultSchema.optional(),
     mappingVersion: z.number().int().positive(),
-    schemaVersion: z.literal(SCHEMA_VERSION),
+    schemaVersion: z.literal(SITE_RECORD_VERSION),
   })
   .refine((r) => r.status !== 'verified' || (r.lastVerified !== undefined && (r.evidenceSummary?.length ?? 0) > 0), {
     message: "status 'verified' requires lastVerified and at least one evidence line",
@@ -62,8 +62,11 @@ export const siteRecordSchema = z
   });
 export type SiteRecord = z.infer<typeof siteRecordSchema>;
 
+/** A stored default is always a refusal. 'allow' exists only in site records. */
+const globalChoice = choice.refine((c): boolean => c === 'refuse', { message: "a default can only be 'refuse'" });
+
 export const settingsSchema = z.strictObject({
-  globalChoices: perPurpose(choice),
+  globalChoices: perPurpose(globalChoice),
   globalSetBy: perPurpose(setBy),
   gpcEnabled: z.boolean(),
   schemaVersion: z.literal(SCHEMA_VERSION),
@@ -91,7 +94,7 @@ export function newSiteRecord(domain: string, mappingVersion: number): SiteRecor
     status: 'not_detected',
     paused: false,
     mappingVersion,
-    schemaVersion: SCHEMA_VERSION,
+    schemaVersion: SITE_RECORD_VERSION,
   };
 }
 

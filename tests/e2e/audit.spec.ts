@@ -1,6 +1,6 @@
 /// <reference types="chrome" />
 import { expect, test } from '@playwright/test';
-import { launch, readStore, startServer, waitForFirstStart, waitForOutcome, type FixtureServer, type Session } from './harness';
+import { HAS_TEST_TRACKER, launch, readStore, startServer, waitForFirstStart, waitForOutcome, type FixtureServer, type Session } from './harness';
 
 let fx: FixtureServer;
 let session: Session;
@@ -45,6 +45,7 @@ test('a site that contacts nothing: tracking checks pass and refusing took one s
 });
 
 test('a tracking service contacted before the answer is reported by its service name only', async () => {
+  test.skip(!HAS_TEST_TRACKER, 'needs the test build: the production tracker list does not hold the fixture tracker');
   const checks = await auditFor('early', '?track=before');
   expect(checks.tracking_before_consent).toEqual({ check: 'tracking_before_consent', outcome: 'signal_detected', services: ['fixture-tracker.localhost'], count: 1 });
   expect(checks.tracking_after_refusal!.outcome).toBe('passed');
@@ -52,6 +53,7 @@ test('a tracking service contacted before the answer is reported by its service 
 });
 
 test('a tracking service contacted after the refusal is reported, and the refusal can still be verified', async () => {
+  test.skip(!HAS_TEST_TRACKER, 'needs the test build: the production tracker list does not hold the fixture tracker');
   const checks = await auditFor('late', '?track=after');
   expect(checks.tracking_before_consent!.outcome).toBe('passed');
   expect(checks.tracking_after_refusal).toEqual({ check: 'tracking_after_refusal', outcome: 'signal_detected', services: ['fixture-tracker.localhost'], count: 1 });
@@ -75,6 +77,7 @@ test('nothing is recorded for a site without a known banner, even if it contacts
 });
 
 test('the popup and settings show the audit as observations, in English and French', async () => {
+  test.skip(!HAS_TEST_TRACKER, 'needs the test build: the production tracker list does not hold the fixture tracker');
   await auditFor('shown', '?track=both');
   const popup = await session.context.newPage();
   await popup.goto(ext(`popup.html?site=${encodeURIComponent(url('shown', 'onetrust.html'))}`));

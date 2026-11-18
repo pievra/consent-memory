@@ -5,7 +5,7 @@ import type { Settings, SiteRecord } from '../../storage/schema';
 
 export type UiRequest =
   | { type: 'ui:state'; tabUrl?: string | undefined }
-  | { type: 'ui:setGlobalChoice'; purpose: Purpose; choice: Choice | null }
+  | { type: 'ui:setGlobalChoice'; purpose: Purpose; choice: 'refuse' | null }
   | { type: 'ui:setSiteChoice'; domain: string; purpose: Purpose; choice: Choice | null }
   | { type: 'ui:setPaused'; domain: string; paused: boolean }
   | { type: 'ui:setGpc'; enabled: boolean }
