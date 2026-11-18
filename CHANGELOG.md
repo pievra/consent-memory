@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.1.1 — 2026-11-18
+
+Fixes from the review of build 0.1.0, before the beta.
+
+- "Accept" is pressed only where the user allowed all six purposes for that site. A default can no longer allow: the settings page shows one statement in place of the six default controls, the store refuses a default set to allow, and the purpose by purpose grant on Cookiebot is reached only through a site's own rule.
+- Stored settings move to schema version 2 at start. Every default becomes a refusal; site records and the Global Privacy Control setting are kept as they were. A failed migration restores the previous contents.
+- Import: defaults that allow in a file exported by 0.1.0 are never imported, under either policy, and the preview says how many were ignored. Site rules in the file are imported as before. The export format stays at version 1.
+- The tracker used by the automated tests is no longer in the production tracker list; it exists only in the test build (`pnpm build:test`).
+- The package now carries the Mozilla Public License 2.0 text (`LICENSE.txt`) and the third party notices (`THIRD_PARTY_NOTICES.txt`).
+- No permission added, no network call added, no consent rule or engine file changed.
+
 ## 0.1.0 — 2026-11-12
 
 First release: an unlisted test release on the Chrome Web Store (link only), by the owner's decision of 2026-11-12. Store name "Pievra: Consent Memory". The welcome and results pages invite testers to email a results file; the extension itself still sends nothing.
