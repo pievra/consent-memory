@@ -1,3 +1,4 @@
+import { resolve } from 'node:path';
 import { defineConfig } from 'wxt';
 import { EXTENSION_NAME, STORE_NAME } from './src/config/brand';
 
@@ -12,6 +13,13 @@ export default defineConfig({
   ...(TEST_BUILD ? { outDirTemplate: '{{browser}}-mv{{manifestVersion}}-test' } : {}),
   manifestVersion: 3,
   imports: false,
+  hooks: {
+    // The licence and the third party notices travel inside the package, from the single copies at the repository root.
+    'build:publicAssets': (_wxt, files) => {
+      files.push({ absoluteSrc: resolve('LICENSE'), relativeDest: 'LICENSE.txt' });
+      files.push({ absoluteSrc: resolve('THIRD_PARTY_NOTICES.md'), relativeDest: 'THIRD_PARTY_NOTICES.txt' });
+    },
+  },
   // Vite's module preload polyfill calls fetch(); extension pages must make no requests.
   vite: () => ({ build: { modulePreload: { polyfill: false } }, define: { __TEST_TRACKER__: JSON.stringify(TEST_BUILD) } }),
   manifest: {

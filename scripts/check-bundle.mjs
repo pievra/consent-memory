@@ -37,6 +37,19 @@ const banned = [
   // The tracker used by the automated tests belongs to test builds only.
   ['test-only tracker', /fixture-tracker/g],
 ];
+// The package must carry the licence text and the third party notices.
+for (const [file, opening] of [['LICENSE.txt', 'Mozilla Public License Version 2.0'], ['THIRD_PARTY_NOTICES.txt', '# Third party notices']]) {
+  let text = '';
+  try {
+    text = readFileSync(join(root, file), 'utf8');
+  } catch {
+    failures.push(`${file} is missing from the package`);
+    continue;
+  }
+  if (!text.startsWith(opening)) failures.push(`${file} does not start with "${opening}"`);
+}
+if (!/@duckduckgo\/autoconsent 18\.1\.0/.test(readFileSync('THIRD_PARTY_NOTICES.md', 'utf8'))) failures.push('THIRD_PARTY_NOTICES.md does not credit @duckduckgo/autoconsent 18.1.0');
+
 const walk = (dir) => readdirSync(dir).flatMap((f) => (statSync(join(dir, f)).isDirectory() ? walk(join(dir, f)) : [join(dir, f)]));
 let total = 0;
 for (const file of walk(root)) {
