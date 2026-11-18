@@ -11,7 +11,7 @@ import { Brand } from '../../ui/brand';
 import { toolName } from '../../ui/tool-names';
 import { AuditSummary, Evidence, LANG, LOCALE, PurposeControl, StatusBadge, call, choicesSummary, listOf, purposeName, t } from '../../ui/shared';
 
-const importAllows = (summary: ImportSummary) => summary.defaultsAllowing.length > 0 || summary.addedAllowing > 0 || summary.changedAllowing > 0;
+const importAllows = (summary: ImportSummary) => summary.addedAllowing > 0 || summary.changedAllowing > 0;
 
 document.documentElement.lang = LANG === 'fr' ? 'fr' : 'en-GB';
 document.title = `${t('options.title')} — ${t('appName')}`;
@@ -331,11 +331,11 @@ function Options() {
           {pendingImport && (
             <div class="notice confirm" role="alertdialog" aria-labelledby="import-text">
               <p id="import-text">{t('options.import.preview', { added: pendingImport.summary.added, differ: pendingImport.summary.changed, unchanged: pendingImport.summary.unchanged })}</p>
+              {pendingImport.summary.defaultsIgnored > 0 && <p id="import-defaults-ignored">{t('options.import.defaultsIgnored', { count: pendingImport.summary.defaultsIgnored })}</p>}
               {importAllows(pendingImport.summary) && (
                 <div class="import-allows">
                   <p><strong>{t('options.import.allows')}</strong></p>
                   <ul>
-                    {pendingImport.summary.defaultsAllowing.length > 0 && <li>{t('options.import.allows.defaults', { list: listOf(pendingImport.summary.defaultsAllowing.map(purposeName)) })}</li>}
                     {pendingImport.summary.addedAllowing > 0 && <li>{t('options.import.allows.added', { count: pendingImport.summary.addedAllowing })}</li>}
                     {pendingImport.summary.changedAllowing > 0 && <li>{t('options.import.allows.changed', { count: pendingImport.summary.changedAllowing })}</li>}
                   </ul>

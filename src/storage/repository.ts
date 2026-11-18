@@ -19,11 +19,11 @@ export interface ImportSummary {
   addedAllowing: number;
   /** Sites that differ and whose version in the file allows at least one purpose. Written only under take_imported. */
   changedAllowing: number;
-  /** Purposes the file would switch to "allow" as the default for every site. Written only under take_imported. */
-  defaultsAllowing: Purpose[];
+  /** Defaults in the file that allow a purpose. They are never imported, under either policy. */
+  defaultsIgnored: number;
 }
 
-const emptySummary = (valid: boolean): ImportSummary => ({ valid, added: 0, changed: 0, unchanged: 0, skipped: 0, addedAllowing: 0, changedAllowing: 0, defaultsAllowing: [] });
+const emptySummary = (valid: boolean): ImportSummary => ({ valid, added: 0, changed: 0, unchanged: 0, skipped: 0, addedAllowing: 0, changedAllowing: 0, defaultsIgnored: 0 });
 
 export class StoreReadOnlyError extends Error {
   constructor(readonly reason: string) {
@@ -324,13 +324,10 @@ export class Repository {
       const summary = emptySummary(true);
       const items: Record<string, unknown> = {};
       const current = await this.getSettings();
-      // An import must never widen consent out of sight: everything it would allow is counted for the preview.
+      // A file exported by version 0.1.0 may carry defaults that allow. They are never imported; the summary says how many were ignored.
       const fileSettings = parsed.data.settings;
-      if (fileSettings) {
-        summary.defaultsAllowing = PURPOSES.filter(
-          (p) => fileSettings.globalChoices[p] === 'allow' && fileSettings.globalSetBy[p] === 'user' && !(current.globalChoices[p] === 'allow' && current.globalSetBy[p] === 'user'),
-        );
-      }
+      if (fileSettings) summary.defaultsIgnored = PURPOSES.filter((p) => fileSettings.globalChoices[p] === 'allow').length;
+      // An import must never widen consent out of sight: every site rule it would allow is counted for the preview.
       const allows = (choices: Record<Purpose, Choice>) => PURPOSES.some((p) => choices[p] === 'allow');
       for (const incoming of parsed.data.sites) {
         const existing = await this.getSite(incoming.domain);

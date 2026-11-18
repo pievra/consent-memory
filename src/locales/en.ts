@@ -179,7 +179,7 @@ export const en = {
   'options.import.tooBig': 'This file is too large (limit 5 MB).',
   'options.import.preview': '{added} new sites, {differ} with different choices, {unchanged} identical.',
   'options.import.allows': 'This file would allow tracking purposes that are refused today:',
-  'options.import.allows.defaults': 'On every site, by default: {list}. Applied only if you choose to use the file’s choices.',
+  'options.import.defaultsIgnored': 'Defaults that allow are never imported: the {count} in this file are ignored.',
   'options.import.allows.added': '{count} new sites where at least one purpose is allowed. Added whichever button you press.',
   'options.import.allows.changed': '{count} sites you already have, where the file allows at least one purpose. Applied only if you choose to use the file’s choices.',
   'options.import.allows.confirm': 'I have read this and want to import the file',

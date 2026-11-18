@@ -174,7 +174,7 @@ export const fr: Record<MessageKey, string> = {
   'options.import.tooBig': 'Ce fichier est trop volumineux (limite 5 Mo).',
   'options.import.preview': '{added} nouveau(x) site(s), {differ} avec des choix différents, {unchanged} identique(s).',
   'options.import.allows': 'Ce fichier autoriserait des finalités de suivi aujourd’hui refusées :',
-  'options.import.allows.defaults': 'Sur tous les sites, par défaut : {list}. Appliqué seulement si vous choisissez d’utiliser les choix du fichier.',
+  'options.import.defaultsIgnored': 'Les réglages par défaut qui autorisent ne sont jamais importés : les {count} de ce fichier sont ignorés.',
   'options.import.allows.added': '{count} nouveaux sites où au moins une finalité est autorisée. Ajoutés quel que soit le bouton choisi.',
   'options.import.allows.changed': '{count} sites déjà présents, pour lesquels le fichier autorise au moins une finalité. Appliqué seulement si vous choisissez d’utiliser les choix du fichier.',
   'options.import.allows.confirm': 'J’ai lu ceci et je souhaite importer le fichier',

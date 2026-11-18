@@ -131,14 +131,14 @@ describe('import', () => {
     await repo.updateSite('differs.example', () => verifiedRecord('differs.example'));
     const incoming = file([entry('same.example'), entry('differs.example', { paused: true, choices: { ...allRefuse, content: 'allow' }, setBy: { ...allDefault, content: 'user' } }), entry('new.example')], { settings: { globalChoices: { ...allRefuse, other: 'allow' }, globalSetBy: { ...allDefault, other: 'user' } } });
     const writes = port.writes;
-    expect(await repo.importData(incoming, 'take_imported', true)).toEqual({ valid: true, added: 1, changed: 1, unchanged: 1, skipped: 0, addedAllowing: 0, changedAllowing: 1, defaultsAllowing: ['other'] });
+    expect(await repo.importData(incoming, 'take_imported', true)).toEqual({ valid: true, added: 1, changed: 1, unchanged: 1, skipped: 0, addedAllowing: 0, changedAllowing: 1, defaultsIgnored: 1 });
     expect(port.writes).toBe(writes);
 
-    expect(await repo.importData(incoming, 'keep_mine', false)).toMatchObject({ valid: true, added: 1, changed: 0, unchanged: 1, skipped: 1, changedAllowing: 0 });
+    expect(await repo.importData(incoming, 'keep_mine', false)).toMatchObject({ valid: true, added: 1, changed: 0, unchanged: 1, skipped: 1, changedAllowing: 0, defaultsIgnored: 1 });
     expect((await repo.getSite('differs.example'))!.paused).toBe(false);
     expect((await repo.getSettings()).globalChoices.other).toBe('refuse');
 
-    expect(await repo.importData(incoming, 'take_imported', false)).toMatchObject({ changed: 1, added: 0 });
+    expect(await repo.importData(incoming, 'take_imported', false)).toMatchObject({ changed: 1, added: 0, defaultsIgnored: 1 });
     const differs = (await repo.getSite('differs.example'))!;
     expect(differs).toMatchObject({ paused: true, status: 'verified', cmp: 'Onetrust' });
     expect(differs.choices.content).toBe('allow');
@@ -151,7 +151,7 @@ describe('import', () => {
     const allUser = Object.fromEntries(PURPOSES.map((p) => [p, 'user']));
     const preset = file([entry('new.example', { choices: allAllow, setBy: allUser })], { settings: { globalChoices: allAllow, globalSetBy: allUser } });
     const preview = await repo.importData(preset, 'take_imported', true);
-    expect(preview.defaultsAllowing).toEqual([...PURPOSES]);
+    expect(preview.defaultsIgnored).toBe(PURPOSES.length);
     expect(preview.addedAllowing).toBe(1);
     // Nothing was written by the preview, and "keep mine" never changes the defaults.
     await repo.importData(preset, 'keep_mine', false);
