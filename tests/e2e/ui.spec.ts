@@ -309,7 +309,9 @@ test('the toolbar button carries a mark for the result, and the popup says why a
 test('choosing allow on a default stores nothing, and the settings and welcome pages carry the brand header', async () => {
   const page = await session.context.newPage();
   await page.goto(ext('options.html'));
-  await purpose(page, 'Preferences').getByLabel('Allow', { exact: true }).check();
+  // The store rejects the request, so the control may fall back at once: click, do not wait for a checked state.
+  await purpose(page, 'Preferences').getByLabel('Allow', { exact: true }).click();
+  await expect(purpose(page, 'Preferences').getByLabel('Refuse', { exact: true })).toBeChecked();
   await expect(page.locator('#defaults-mixed')).toHaveCount(0);
   await expect(page.locator('#defaults-all')).toHaveCount(0);
   const stored = (await readStore(session)).settings as { globalChoices: Record<string, string> } | undefined;

@@ -1,4 +1,7 @@
-export const SCHEMA_VERSION = 1;
+/** Version of the store as a whole (metadata and settings). Raising it needs a migration in storage/migrations.ts. */
+export const SCHEMA_VERSION = 2;
+/** Version of a site record. Unchanged by store version 2, which leaves every site record as it was. */
+export const SITE_RECORD_VERSION = 1;
 /** Maximum times an engine action is run on one page load. */
 export const MAX_ACTION_ATTEMPTS = 3;
 /** Delay before evidence is read after an action, so the CMP can store its state. */

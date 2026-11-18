@@ -1,5 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import type { ReportRequest } from '../../src/adapters/shared/protocol';
+import { planWholeBannerAction } from '../../src/core/consent/mappings';
+import { PURPOSES } from '../../src/core/consent/purposes';
+import { resolvePreferences } from '../../src/core/consent/resolver';
 import { isValidSiteKey, siteKeysForUrl } from '../../src/core/domains/site-key';
 import { applyReport, applyTopFrameEvidence, applyWall, resumableCmp, topFrameSnapshotFor } from '../../src/storage/apply-report';
 import { openStore } from '../../src/storage/migrations';
@@ -61,7 +64,7 @@ describe('openStore', () => {
   it('creates meta on an empty store', async () => {
     const port = new MemoryStorage();
     expect((await openStore(port, FIXED_NOW)).mode).toBe('read_write');
-    expect(port.data.get(KEY.meta)).toMatchObject({ schemaVersion: 1 });
+    expect(port.data.get(KEY.meta)).toMatchObject({ schemaVersion: 2 });
   });
   it('opens a newer store read only and writes nothing', async () => {
     const port = new MemoryStorage();
@@ -84,6 +87,41 @@ describe('openStore', () => {
     expect(result.mode).toBe('read_write');
     expect(port.data.get('site:a.example')).toEqual({ v: 2 });
     expect([...port.data.keys()].some((k) => k.startsWith(KEY.backupPrefix))).toBe(false);
+  });
+  it('version 1 → 2 turns every default into a refusal nobody chose, keeps the other settings and leaves site records untouched', async () => {
+    const port = new MemoryStorage();
+    const all = (value: string) => Object.fromEntries(PURPOSES.map((p) => [p, value]));
+    const meta = { schemaVersion: 1, createdAt: '2026-11-12T08:00:00.000Z' };
+    const sixAllows = { domain: 'allowed.example', choices: all('allow'), setBy: all('user'), status: 'not_detected', paused: false, mappingVersion: 2, schemaVersion: 1 };
+    const refused = { domain: 'refused.example', choices: { ...all('refuse'), content: 'allow' }, setBy: { ...all('default'), content: 'user' }, status: 'not_detected', paused: true, mappingVersion: 2, schemaVersion: 1 };
+    port.data.set(KEY.meta, meta);
+    port.data.set(KEY.settings, { globalChoices: all('allow'), globalSetBy: all('user'), gpcEnabled: false, schemaVersion: 1 });
+    port.data.set('site:allowed.example', structuredClone(sixAllows));
+    port.data.set('site:refused.example', structuredClone(refused));
+
+    const repo = new Repository(port, FIXED_NOW);
+    expect((await repo.init()).mode).toBe('read_write');
+    expect(port.data.get(KEY.meta)).toEqual({ ...meta, schemaVersion: 2, lastMigrationAt: FIXED_NOW().toISOString() });
+    expect(port.data.get(KEY.settings)).toEqual({ globalChoices: all('refuse'), globalSetBy: all('default'), gpcEnabled: false, schemaVersion: 2 });
+    expect(port.data.get('site:allowed.example')).toEqual(sixAllows);
+    expect(port.data.get('site:refused.example')).toEqual(refused);
+    expect([...port.data.keys()].some((k) => k.startsWith(KEY.backupPrefix) || k.startsWith(KEY.quarantinePrefix))).toBe(false);
+
+    // The site with six site allows still leads to acceptance; any other site is refused.
+    const plan = async (site: string) => {
+      const r = resolvePreferences(await repo.resolverInput({ host: site, site }));
+      if (r.paused) throw new Error('paused');
+      return planWholeBannerAction(r.choices, r.sources);
+    };
+    expect(await plan('allowed.example')).toMatchObject({ action: 'optIn', unfulfilled: [] });
+    expect(await plan('elsewhere.example')).toMatchObject({ action: 'optOut', unfulfilled: [] });
+  });
+  it('version 1 → 2 on a store without settings only raises the version', async () => {
+    const port = new MemoryStorage();
+    port.data.set(KEY.meta, { schemaVersion: 1, createdAt: FIXED_NOW().toISOString() });
+    expect((await new Repository(port, FIXED_NOW).init()).mode).toBe('read_write');
+    expect(port.data.has(KEY.settings)).toBe(false);
+    expect(port.data.get(KEY.meta)).toMatchObject({ schemaVersion: 2 });
   });
   it.each([
     ['a throwing migration', { 1: () => { throw new Error('boom'); } }, undefined],
