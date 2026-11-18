@@ -9,7 +9,7 @@ import type { ImportSummary } from '../../storage/repository';
 import { EXPORT_FORMAT, type ExportFile, type SiteRecord } from '../../storage/schema';
 import { Brand } from '../../ui/brand';
 import { toolName } from '../../ui/tool-names';
-import { AuditSummary, Evidence, LANG, LOCALE, PurposeControl, StatusBadge, call, choicesSummary, listOf, purposeName, t } from '../../ui/shared';
+import { AuditSummary, Evidence, LANG, LOCALE, StatusBadge, call, choicesSummary, purposeName, t } from '../../ui/shared';
 
 const importAllows = (summary: ImportSummary) => summary.addedAllowing > 0 || summary.changedAllowing > 0;
 
@@ -83,7 +83,6 @@ function Options() {
 
   if (!state) return <p role="status">…</p>;
   const disabled = state.readOnly;
-  const allowedByDefault = PURPOSES.filter((p) => state.settings.globalChoices[p] === 'allow');
   const chosen = rows.filter((r) => selected.has(r.domain));
   const toggle = (domain: string) => setSelected((old) => { const next = new Set(old); if (next.has(domain)) next.delete(domain); else next.add(domain); return next; });
 
@@ -170,30 +169,7 @@ function Options() {
 
       <section aria-labelledby="defaults">
         <h2 id="defaults">{t('options.defaults')}</h2>
-        <p class="muted">{t('options.defaultsHint')}</p>
-        <div class="card">
-          {PURPOSES.map((purpose) => (
-            <PurposeControl
-              key={purpose}
-              group="global"
-              purpose={purpose}
-              value={state.settings.globalChoices[purpose]}
-              disabled={disabled}
-              onChange={(choice) => void send({ type: 'ui:setGlobalChoice', purpose, choice: choice === 'allow' ? 'allow' : null })}
-            />
-          ))}
-        </div>
-        {allowedByDefault.length === PURPOSES.length ? (
-          <p class="notice" id="defaults-all" role="status">
-            {t('options.defaults.allowAll')}
-          </p>
-        ) : allowedByDefault.length > 0 ? (
-          <p class="notice" id="defaults-mixed" role="status">
-            {t('options.defaults.mixed', { list: listOf(allowedByDefault.map(purposeName)) })}
-          </p>
-        ) : (
-          <p class="muted small">{t('popup.wholeBanner')}</p>
-        )}
+        <p id="defaults-statement">{t('options.defaultsHint')}</p>
       </section>
 
       <section aria-labelledby="gpc">
@@ -310,9 +286,9 @@ function Options() {
         </div>
         {bulk && (
           <div class="notice confirm" role="alertdialog" aria-labelledby="bulk-text">
-            <p id="bulk-text">{bulk.counts.sites + bulk.counts.defaults === 0 ? t('options.bulk.none') : t('options.bulk.preview', bulk.counts)}</p>
+            <p id="bulk-text">{bulk.counts.sites === 0 ? t('options.bulk.none') : t('options.bulk.preview', { sites: bulk.counts.sites })}</p>
             <div class="toolbar">
-              {bulk.counts.sites + bulk.counts.defaults > 0 && <button type="button" onClick={() => void applyBulk()}>{t('options.confirm')}</button>}
+              {bulk.counts.sites > 0 && <button type="button" onClick={() => void applyBulk()}>{t('options.confirm')}</button>}
               <button type="button" class="quiet" onClick={() => setBulk(null)}>{t('options.cancel')}</button>
             </div>
           </div>

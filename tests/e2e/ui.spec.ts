@@ -136,7 +136,7 @@ test('settings: defaults, search, filter, forget with undo, and bulk refusal wit
 
   // bulk: preview first, nothing written until confirmed
   await page.getByRole('button', { name: 'Refuse everything on all sites' }).click();
-  await expect(page.locator('#bulk-text')).toHaveText('This will change your defaults for 0 purposes and your choices on 1 sites.');
+  await expect(page.locator('#bulk-text')).toHaveText('This will change your choices on 1 sites.');
   expect((await site('gamma.localhost')).choices.content).toBe('allow');
   await page.getByRole('button', { name: 'Confirm' }).click();
   await expect.poll(async () => (await site('gamma.localhost')).choices.content).toBe('refuse');
@@ -318,16 +318,21 @@ test('the toolbar button carries a mark for the result, and the popup says why a
   expect(await badge(plain)).toBe('');
 });
 
-test('choosing allow on a default stores nothing, and the settings and welcome pages carry the brand header', async () => {
+test('settings offer no way to allow by default, in English and French, and the settings and welcome pages carry the brand header', async () => {
   const page = await session.context.newPage();
+  await page.setViewportSize({ width: 1280, height: 900 });
+  for (const [lang, statement] of [
+    ['en', 'Every purpose is refused on every site unless you allow it for that site.'],
+    ['fr', 'Toutes les finalités sont refusées sur tous les sites, sauf celles que vous autorisez pour un site donné.'],
+  ] as const) {
+    await page.goto(ext(`options.html?lang=${lang}`));
+    const defaults = page.locator('section[aria-labelledby="defaults"]');
+    await expect(defaults.locator('#defaults-statement')).toHaveText(statement);
+    await expect(defaults.locator('input, button, select')).toHaveCount(0);
+    await expectAccessible(page);
+    await page.screenshot({ path: `test-results/settings-${lang}.png`, fullPage: true });
+  }
   await page.goto(ext('options.html'));
-  // The store rejects the request, so the control may fall back at once: click, do not wait for a checked state.
-  await purpose(page, 'Preferences').getByLabel('Allow', { exact: true }).click();
-  await expect(purpose(page, 'Preferences').getByLabel('Refuse', { exact: true })).toBeChecked();
-  await expect(page.locator('#defaults-mixed')).toHaveCount(0);
-  await expect(page.locator('#defaults-all')).toHaveCount(0);
-  const stored = (await readStore(session)).settings as { globalChoices: Record<string, string> } | undefined;
-  expect(Object.values(stored?.globalChoices ?? {}).includes('allow')).toBe(false);
   // The settings and the welcome page carry the brand header.
   await expect(page.getByRole('img', { name: 'Pievra' })).toBeVisible();
   await page.goto(ext('onboarding.html'));
